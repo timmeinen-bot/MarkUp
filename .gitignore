@@ -1,0 +1,21 @@
+bin/
+obj/
+*.exe
+*.user
+.vs/
+.claude/
+screenshot_qa.png
+
+# FB-20260912-101909129-ca2d: Der Quellbaum geht oeffentlich.
+# Fremde Firmenlogos bleiben auf der Platte nutzbar, aber nicht in git.
+stamps/*_logo.png
+# Arbeitsnotizen fuer Claude gehoeren nicht in ein oeffentliches Repo.
+CLAUDE.md
+# Sicherungen und Bauwerkzeuge
+*.bak
+*.bak.*
+*.bak_*
+*.vor_*
+__pycache__/
+installer/
+build_installer.py

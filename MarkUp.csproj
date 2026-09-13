@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>MarkUp</AssemblyName>
+    <Nullable>disable</Nullable>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <!-- FB-2fa9 (Veroeffentlichung): self-contained — .NET-8-Runtime ist eingebettet,
+         Nutzer brauchen NICHTS zu installieren. Single-File + Kompression haelt die
+         EXE bei ~35 MB statt ~75 MB. (Vorher framework-dependent/MUP-6c1c ~5MB, aber
+         das setzt eine installierte Runtime voraus — fuer die oeffentliche Verteilung
+         untauglich.) -->
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <!-- MUP-7ffd: ReadyToRun pre-compilation (eliminates JIT startup overhead) -->
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <!-- MUP-234654: Embed app icon in EXE for Explorer/shortcuts -->
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <!-- PUB-2026-19: Herausgeber und Urheberrecht. Windows zeigt das in den
+         Dateieigenschaften an, und die Codesignatur fuehrt spaeter denselben
+         Namen. Die Oberflaeche LIEST die Version aus der Assembly
+         (AppInfo.VersionText), sie wird nicht mehr getippt.
+         Siehe FB-20260912-102451348-e535. -->
+    <Company>Eselchen Labs</Company>
+    <Product>MarkUp</Product>
+    <!-- .NET nimmt AssemblyTitle als FileDescription, nicht Description. -->
+    <AssemblyTitle>MarkUp - Bildschirm-Annotation</AssemblyTitle>
+    <Authors>Eselchen Labs</Authors>
+    <Copyright>Copyright (C) 2026 Eselchen Labs</Copyright>
+    <Description>MarkUp - transparentes Bildschirm-Annotationswerkzeug fuer Windows</Description>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+</PropertyGroup>
+  <ItemGroup>
+    <!-- MUP-234715 v7: EmbeddedResource removed — logos now hardcoded as base64 in Program.cs -->
+    <!-- Content copy kept for development/debug runs (emoji PNGs still loaded from filesystem) -->
+    <Content Include="stamps\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+</Project>
