@@ -362,7 +362,7 @@ class CensorShape : Shape {
                 using (HatchBrush h=new HatchBrush(HatchStyle.LargeGrid,Color.FromArgb(20,80,80,80),Color.FromArgb(a,10,10,20))) g.FillRectangle(h,Rect);
                 break;
             case CensorMethod.Pixelate:
-                // MUP-0aa8: Greenshot-style pixelation — grid of colored blocks
+                // MUP-0aa8: Greenshot-style pixelation - grid of colored blocks
                 int bs = Intensity==CensorIntensity.Light ? 14 : Intensity==CensorIntensity.Heavy ? 6 : 10;
                 if (PixelCache != null) {
                     // Draw cached pixelated screenshot
@@ -426,7 +426,7 @@ class ImageStampShape : Shape {
         if (StampImage==null) return;
         int w=(int)(StampImage.Width*Scale), h=(int)(StampImage.Height*Scale);
         int x=Loc.X-w/2, y=Loc.Y-h/2;
-        // MUP-9687: Removed drop shadow — was causing gray background on icons
+        // MUP-9687: Removed drop shadow - was causing gray background on icons
         g.InterpolationMode=InterpolationMode.HighQualityBicubic;
         g.DrawImage(StampImage,x,y,w,h);
     }
@@ -467,7 +467,7 @@ class NumberedCircleShape : Shape {
         } else {
             using (Pen p=new Pen(Color,Width)) g.DrawEllipse(p,Rect);
         }
-        // Draw centered number text — font size ~40% of smaller dimension
+        // Draw centered number text - font size ~40% of smaller dimension
         string txt=Number.ToString();
         float dim=Math.Min(Rect.Width,Rect.Height);
         float fontSize=Math.Max(8f, dim*0.4f);
@@ -486,7 +486,7 @@ class NumberedCircleShape : Shape {
     }
 }
 
-// ── Stamp Manager — loads/generates all stamp images ────────────────────────
+// ── Stamp Manager - loads/generates all stamp images ────────────────────────
 static class StampManager {
     static Dictionary<string,Bitmap> _cache = new Dictionary<string,Bitmap>();
     static bool _initialized = false;
@@ -570,7 +570,7 @@ static class StampManager {
     // MUP-234715 v7: Try hardcoded byte[] first, then filesystem fallback
     static void LoadLogo(string key, string path) {
         try {
-            // Hardcoded data — guaranteed to work regardless of filesystem
+            // Hardcoded data - guaranteed to work regardless of filesystem
             byte[] data = null;
             if (data != null) {
                 using (var ms = new System.IO.MemoryStream(data))
@@ -623,7 +623,7 @@ static class StampManager {
         }
     }
 
-    // MUP-234951 v3: Pre-bundled PNG color emojis (Twemoji) — guaranteed color on all Windows
+    // MUP-234951 v3: Pre-bundled PNG color emojis (Twemoji) - guaranteed color on all Windows
     static readonly Dictionary<string,string> EmojiPngMap = new Dictionary<string,string> {
         {"\u2714","check"},{"\u274C","cross"},{"\u2757","exclamation"},{"\u2753","question"},
         {"\u2B50","star"},{"\uD83D\uDD25","fire"},{"\uD83D\uDC4D","thumbsup"},{"\uD83D\uDC4E","thumbsdown"},
@@ -679,7 +679,7 @@ static class StampManager {
     }
 }
 
-// MKP-133745: Global low-level mouse hook — captures mouse events regardless of focus
+// MKP-133745: Global low-level mouse hook - captures mouse events regardless of focus
 static class MouseHookManager {
     static IntPtr _hookId = IntPtr.Zero;
     static Win32.HookProc _proc; // prevent GC collection of delegate
@@ -688,10 +688,10 @@ static class MouseHookManager {
     public static bool SwallowClicks;
     // MUP-3205 v2: Skip all hook processing when markup is inactive
     public static bool Active;
-    // MUP-c5be: Toolbar bounds — clicks inside this rect are NOT swallowed
+    // MUP-c5be: Toolbar bounds - clicks inside this rect are NOT swallowed
     public static Rectangle ToolbarRect;
 
-    // MKP-133745 v2: Async queue — hook callback returns instantly, UI thread drains
+    // MKP-133745 v2: Async queue - hook callback returns instantly, UI thread drains
     static ConcurrentQueue<(int msg, Point pt)> _queue = new ConcurrentQueue<(int, Point)>();
     static bool _isDown;
 
@@ -708,7 +708,7 @@ static class MouseHookManager {
     }
 
     static IntPtr Callback(int nCode, IntPtr wParam, IntPtr lParam) {
-        // MUP-3205 v2: Skip ALL processing when markup mode is OFF — zero overhead
+        // MUP-3205 v2: Skip ALL processing when markup mode is OFF - zero overhead
         if (nCode >= 0 && Active) {
             int msg = (int)wParam;
             if (msg == Win32.WM_LBUTTONDOWN || (msg == Win32.WM_MOUSEMOVE && _isDown) || msg == Win32.WM_LBUTTONUP
@@ -718,7 +718,7 @@ static class MouseHookManager {
                 if (msg == Win32.WM_LBUTTONDOWN) _isDown = true;
                 else if (msg == Win32.WM_LBUTTONUP) _isDown = false;
                 _queue.Enqueue((msg, pt));
-                // MUP-c5be: Don't swallow clicks on the toolbar — let them pass through
+                // MUP-c5be: Don't swallow clicks on the toolbar - let them pass through
                 if (SwallowClicks && (msg == Win32.WM_LBUTTONDOWN || msg == Win32.WM_LBUTTONUP || msg == Win32.WM_RBUTTONDOWN)
                     && !ToolbarRect.Contains(pt))
                     return (IntPtr)1;
@@ -741,6 +741,12 @@ class DrawState {
     public float    Width     = 4f;
     public bool     PassThru  = true;  // MUP-234541: Markup mode OFF at startup
     public bool     ShowHelp  = false;
+    // FB-20260912-102455567-e140: Lage des Hilfe-Kastens.
+    // null = mittig wie bisher -- wer nie zieht, merkt keinen
+    // Unterschied. 🔴 Gehoert in den GETEILTEN Zustand: sonst
+    // wandert die Hilfe auf einem Bildschirm und bleibt auf dem
+    // anderen stehen.
+    public Point?   HelpPos   = null;
 
     // Stamp tool
     public string StampEmoji = "\u2714"; // ✔ checkmark default
@@ -766,7 +772,7 @@ class DrawState {
     public int       NextNumCircle = 1;
     public bool      NumCircleFill = false;
 
-    // Hotkeys — FB-3792 v3: Ctrl+Shift+letter defaults (freely configurable)
+    // Hotkeys - FB-3792 v3: Ctrl+Shift+letter defaults (freely configurable)
     public Keys KPen=Keys.Control|Keys.Shift|Keys.D, KArrow=Keys.Control|Keys.Shift|Keys.A, KRect=Keys.Control|Keys.Shift|Keys.R, KEll=Keys.Control|Keys.Shift|Keys.C,
                 KText=Keys.Control|Keys.Shift|Keys.T, KHl=Keys.Control|Keys.Shift|Keys.H, KCen=Keys.Control|Keys.Shift|Keys.B, KStamp=Keys.Control|Keys.Shift|Keys.S,
                 KNumCircle=Keys.Control|Keys.Shift|Keys.N,
@@ -825,7 +831,7 @@ class SplashScreen : Form {
         ShowInTaskbar = false;
         Size = new Size(360, 220);
         DoubleBuffered = true;
-        // Status label (only child — everything else painted)
+        // Status label (only child - everything else painted)
         _status = new Label {
             Text = "Starte...",
             Font = new Font("Segoe UI", 9f),
@@ -863,7 +869,7 @@ class SplashScreen : Form {
             using (var lb = new LinearGradientBrush(br, c1, c2, (float)(_rainbowOff * 2 % 360)))
             using (Pen p = new Pen(lb, 3)) { p.LineJoin = System.Drawing.Drawing2D.LineJoin.Round; g.DrawRectangle(p, 1, 1, W-3, H-3); }
         }
-        // Rainbow title "MarkUp" — full gradient text
+        // Rainbow title "MarkUp" - full gradient text
         using (Font tf = new Font("Segoe UI", 28f, FontStyle.Bold)) {
             SizeF tsz = g.MeasureString("MarkUp", tf);
             float tx = (W - tsz.Width) / 2, ty = 40;
@@ -1021,7 +1027,7 @@ class MarkUpApp {
                 if (r.TryGetProperty("kQuit", out var kqu) && Enum.TryParse<Keys>(kqu.GetString(), out var kquv)) _state.KQuit = kquv;
             }
             if (r.TryGetProperty("numCircleFill", out var ncf)) _state.NumCircleFill = ncf.GetBoolean();
-        } catch { /* corrupt file — use defaults */ }
+        } catch { /* corrupt file - use defaults */ }
     }
 
     void SaveSettings() {
@@ -1084,13 +1090,13 @@ class MarkUpApp {
                 using (var bg = new LinearGradientBrush(new Rectangle(0,0,sz,sz), Color.FromArgb(80,40,180), Color.FromArgb(50,25,120), LinearGradientMode.Vertical))
                     g.FillPath(bg, path);
             }
-            // Bold white "M" — FB-871d: scaled font from 18 to 144
+            // Bold white "M" - FB-871d: scaled font from 18 to 144
             using (Font f = new Font("Segoe UI", 144f, FontStyle.Bold))
             using (var br = new SolidBrush(Color.White)) {
                 SizeF ms = g.MeasureString("M", f);
                 g.DrawString("M", f, br, (sz - ms.Width) / 2, (sz - ms.Height) / 2 - 16);
             }
-            // Rainbow underline stripe — FB-871d: scaled proportionally
+            // Rainbow underline stripe - FB-871d: scaled proportionally
             Rectangle stripe = new Rectangle(40, sz - 56, sz - 80, 24);
             Color[] rc = { Color.Red, Color.Orange, Color.Yellow, Color.Lime, Color.Cyan, Color.DodgerBlue, Color.BlueViolet };
             using (var lb = new LinearGradientBrush(stripe, Color.Red, Color.BlueViolet, LinearGradientMode.Horizontal)) {
@@ -1179,7 +1185,7 @@ class MarkUpApp {
         _drainTimer = new Timer { Interval = 16 }; // MUP-c55f: 60 FPS drain (was 33ms/30fps)
         _drainTimer.Tick += (s, e) => DrainMouseQueue();
         _drainTimer.Start();
-        _rainbowTimer = new Timer { Interval = 150 }; // MUP-c55f: 150ms (was 100ms) — reduced CPU load
+        _rainbowTimer = new Timer { Interval = 150 }; // MUP-c55f: 150ms (was 100ms) - reduced CPU load
         _rainbowTimer.Tick += (s, e) => {
             // MUP-c55f: Skip full redraw if no overlay has animated rainbow shapes
             bool hasAnimated = false;
@@ -1191,7 +1197,7 @@ class MarkUpApp {
         _state.Changed += () => { if (_state.IsRainbow && _state.IsAnimatedRainbow) _rainbowTimer.Start(); else _rainbowTimer.Stop(); };
         _state.Changed += () => SaveSettings(); // FB-1452: Persist settings on every change
 
-        // Tray — FB-a615: Keyboard shortcuts + ampersand accelerators
+        // Tray - FB-a615: Keyboard shortcuts + ampersand accelerators
         ContextMenuStrip cm = new ContextMenuStrip();
         cm.BackColor=Color.FromArgb(30,30,46); cm.ForeColor=Color.White;
         cm.Renderer=new ToolStripProfessionalRenderer(new DarkColorTable());
@@ -1225,7 +1231,7 @@ class MarkUpApp {
     }
 
     // MKP-133745 v2: Drain async mouse event queue on UI thread
-    // MUP-130727: Batch renders — silent moves + single Render() at end
+    // MUP-130727: Batch renders - silent moves + single Render() at end
     void DrainMouseQueue() {
         bool needsRender = false;
         while (MouseHookManager.TryDequeue(out var evt)) {
@@ -1240,7 +1246,7 @@ class MarkUpApp {
         if (needsRender && _activeOverlay != null) _activeOverlay.Render();
     }
 
-    // MUP-b45e v3: Single VirtualScreen overlay — just check toolbar bounds
+    // MUP-b45e v3: Single VirtualScreen overlay - just check toolbar bounds
     ScreenOverlay FindOverlay(Point screenPt) {
         // Skip if click is on the toolbar
         if (_bar != null && _bar.Bounds.Contains(screenPt)) return null;
@@ -1269,7 +1275,7 @@ class MarkUpApp {
         }
     }
 
-    // MUP-130727: Silent variant — updates shape coords without triggering Render()
+    // MUP-130727: Silent variant - updates shape coords without triggering Render()
     void OnGlobalMouseMoveSilent(Point screenPt) {
         if (_activeOverlay != null) {
             // MUP-409e: Use physical origin for coordinate translation
@@ -1347,7 +1353,7 @@ class MarkUpApp {
             IShellLink link = (IShellLink)new ShellLink();
             link.SetPath(exePath);
             link.SetWorkingDirectory(Path.GetDirectoryName(exePath));
-            link.SetDescription("MarkUp — Screen Annotation Tool");
+            link.SetDescription("MarkUp - Screen Annotation Tool");
             link.SetIconLocation(exePath, 0);
             ((System.Runtime.InteropServices.ComTypes.IPersistFile)link).Save(lnkPath, false);
             Marshal.ReleaseComObject(link);
@@ -1404,7 +1410,7 @@ class ScreenOverlay : Form {
     Point  _prevHookPt; // MUP-b72a: Previous mouse point for dirty-segment tracking
     bool   _txOn; Point _txPos; string _txBuf = "";
 
-    // MUP-c55f: Performance — dirty-region tracking + idle skip + frame cap
+    // MUP-c55f: Performance - dirty-region tracking + idle skip + frame cap
     Rectangle _dirtyRect = Rectangle.Empty;
     bool _needsRender = false;
     readonly System.Diagnostics.Stopwatch _frameSw = System.Diagnostics.Stopwatch.StartNew();
@@ -1448,7 +1454,7 @@ class ScreenOverlay : Form {
         FormBorderStyle = FormBorderStyle.None;
         TopMost = true; ShowInTaskbar = false;
         SetStyle(ControlStyles.Opaque, true);
-        // MUP-409e: Set initial WinForms Location/Size — will be corrected by SetWindowPos in Shown handler
+        // MUP-409e: Set initial WinForms Location/Size - will be corrected by SetWindowPos in Shown handler
         Location = bounds.Location;
         Size     = bounds.Size;
         InitBitmaps();
@@ -1554,7 +1560,7 @@ class ScreenOverlay : Form {
         _needsRender = true;
     }
 
-    // FB-3684: Force immediate render on clear — bypass Render() frame rate cap
+    // FB-3684: Force immediate render on clear - bypass Render() frame rate cap
     // so animated rainbow shapes don't linger on screen after first press.
     public void ClearAll() {
         _shapes.Clear(); _txOn=false; _txBuf="";
@@ -1573,7 +1579,7 @@ class ScreenOverlay : Form {
     }
     public void Undo()     { if (_shapes.Count>0) { _shapes.RemoveAt(_shapes.Count-1); RedrawCommitted(); MarkFullDirty(); Render(); } }
 
-    // MUP-c55f v3: Helper — is this shape an animated rainbow?
+    // MUP-c55f v3: Helper - is this shape an animated rainbow?
     static bool IsAnimatedRainbow(Shape sh) {
         return (sh is FreehandShape fs && fs.AnimatedRainbow) ||
                (sh is ArrowShape ar && ar.AnimatedRainbow) ||
@@ -1596,7 +1602,7 @@ class ScreenOverlay : Form {
         _staticDirty = false;
     }
 
-    // MUP-66e2 v2: Region-clipped rainbow tick — only redraw animated shape bounds (not full screen)
+    // MUP-66e2 v2: Region-clipped rainbow tick - only redraw animated shape bounds (not full screen)
     public void RedrawAnimated() {
         if (_committed == null) return;
         if (_staticDirty) RebuildStaticLayer();
@@ -1642,10 +1648,10 @@ class ScreenOverlay : Form {
         if (_display==null) return;
         // MUP-c55f: Skip render if nothing changed
         if (!_needsRender) return;
-        // MUP-c55f: Frame rate cap — skip if too soon since last frame
+        // MUP-c55f: Frame rate cap - skip if too soon since last frame
         if (_frameSw.ElapsedMilliseconds < MIN_FRAME_MS) return;
         using (Graphics g=Graphics.FromImage(_display)) {
-            // MUP-b72a: Always clear full bitmap — SetClip caused stale artifacts when shapes overlap
+            // MUP-b72a: Always clear full bitmap - SetClip caused stale artifacts when shapes overlap
             g.Clear(Color.Transparent);
             g.SmoothingMode=SmoothingMode.AntiAlias;
             if (_committed!=null) g.DrawImage(_committed,0,0);
@@ -1670,7 +1676,7 @@ class ScreenOverlay : Form {
         }
     }
 
-    // MUP-3205 v2: Cached GDI handles — avoids 8MB+ alloc/free per frame
+    // MUP-3205 v2: Cached GDI handles - avoids 8MB+ alloc/free per frame
     IntPtr _cachedDc = IntPtr.Zero;
     IntPtr _cachedBmp = IntPtr.Zero;
     IntPtr _cachedOld = IntPtr.Zero;
@@ -1683,7 +1689,7 @@ class ScreenOverlay : Form {
         }
     }
 
-    // MUP-3205 v3: Cleaned up Push() — single HBITMAP lifecycle, no redundant deselect/delete
+    // MUP-3205 v3: Cleaned up Push() - single HBITMAP lifecycle, no redundant deselect/delete
     void Push() {
         if (_display==null||!IsHandleCreated) return;
         // Ensure we have a compatible DC (reused across frames)
@@ -1714,7 +1720,25 @@ class ScreenOverlay : Form {
     // MKP-133745: Public methods called from MarkUpApp via global mouse hook.
     // These receive overlay-local coordinates (already translated from screen coords).
     public void OnHookDown(Point loc) {
-        if (_st.ShowHelp) { _st.ShowHelp=false; MarkFullDirty(); _st.Fire(); return; }
+        // FB-20260912-102455567-e140: Vorher schloss JEDER Klick die
+        // Hilfe -- man konnte sie nicht anfassen, ohne sie zu schliessen.
+        //
+        // 🔴 Der Zweig endet in JEDEM Fall mit `return`: unter der offenen
+        // Hilfe wird nie gezeichnet. Ohne das malte ein Klick in den
+        // Kasten eine Linie.
+        if (_st.ShowHelp) {
+            Rectangle hr = HelpRect();
+            if (HelpCloseRect(hr).Contains(loc)) {
+                _st.ShowHelp=false; _helpDrag=false; MarkFullDirty(); _st.Fire();
+            } else if (HelpTitleRect(hr).Contains(loc)) {
+                _helpDrag=true;
+                _helpGrab=new Size(loc.X-hr.X, loc.Y-hr.Y);
+            } else if (!hr.Contains(loc)) {
+                // Klick daneben schliesst weiter -- die gewohnte Geste.
+                _st.ShowHelp=false; MarkFullDirty(); _st.Fire();
+            }
+            return;
+        }
         if (_st.PassThru) return;
         if (_st.Tool==DrawTool.Text) {
             if (_txOn&&_txBuf.Length>0) CommitText();
@@ -1763,7 +1787,18 @@ class ScreenOverlay : Form {
             }
         }
     }
+    // FB-20260912-102455567-e140: Zustand des Ziehens.
+    bool _helpDrag = false;
+    Size _helpGrab = Size.Empty;
+
     public void OnHookMove(Point loc) {
+        if (_helpDrag) {
+            // 🔴 MarkFullDirty, nicht MarkDirty: `MarkDirty` arbeitet mit
+            // Bereichen, ein bewegter Kasten hinterliesse Schlieren.
+            _st.HelpPos = HelpClamp(new Point(loc.X-_helpGrab.Width,
+                                              loc.Y-_helpGrab.Height));
+            MarkFullDirty(); Render(); return;
+        }
         if (!_down||_live==null) return;
         // MUP-b72a: Mark segment between prev and current point to avoid gaps
         int pad = Math.Max(100, (int)(_st.Width * 3));
@@ -1772,7 +1807,7 @@ class ScreenOverlay : Form {
         UpdateLiveShape(loc);
         Render();
     }
-    // MUP-130727: Silent variant — updates shape coords without Render() for batch drain
+    // MUP-130727: Silent variant - updates shape coords without Render() for batch drain
     // MUP-c55f: Still marks dirty so next Render() knows what changed
     public void OnHookMoveSilent(Point loc) {
         if (!_down||_live==null) return;
@@ -1792,6 +1827,12 @@ class ScreenOverlay : Form {
         }
     }
     public void OnHookUp(Point loc) {
+        if (_helpDrag) {
+            _helpDrag=false;
+            // Fire(), damit die anderen Overlays die neue Lage uebernehmen.
+            _st.Fire();
+            return;
+        }
         if (!_down) return; _down=false;
         if (_live!=null) {
             // MUP-0aa8: Capture + pixelate screen region for censor pixelation
@@ -1828,15 +1869,52 @@ class ScreenOverlay : Form {
     }
 
     // ── Help ──────────────────────────────────────────────────────────────────
-    void DrawHelp(Graphics g) {
+    // FB-20260912-102455567-e140: EINE Stelle rechnet die Lage.
+    // Zeichnen und Trefferpruefung muessen dieselbe benutzen, sonst
+    // laufen sie auseinander und das Kreuz sitzt woanders, als es
+    // aussieht.
+    //
+    // FB-20260912-102451348-e535: HilfeH 420 -> 448. Der Schliess-Hinweis
+    // sitzt bei ph-46, die Fusszeile bei ph-24; daneben war kein Platz.
+    const int HilfeB = 500, HilfeH = 448, GriffH = 44, KreuzG = 28;
+
+    Rectangle HelpRect() {
         // MUP-409e: Use physical dimensions for centering (bitmap is at physical size)
         int bw=_physWidth>0?_physWidth:Width, bh=_physHeight>0?_physHeight:Height;
-        // FB-20260912-102451348-e535: ph 420 -> 448. Der
-        // Schliess-Hinweis sitzt bei py+ph-22 ab px+pw-200;
-        // daneben ist kein Platz fuer eine Fusszeile. Sie
-        // braucht eine eigene Zeile, also muss der Kasten
-        // wachsen.
-        int pw=500,ph=448,px=(bw-pw)/2,py=(bh-ph)/2;
+        if (!_st.HelpPos.HasValue)
+            return new Rectangle((bw-HilfeB)/2, (bh-HilfeH)/2, HilfeB, HilfeH);
+        Point p = _st.HelpPos.Value;
+        // 🔴 Aufloesung geaendert? Ein gespeicherter Punkt kann danach
+        // ausserhalb liegen. Dann in die Mitte zurueck, statt unsichtbar
+        // zu bleiben.
+        if (p.X > bw-60 || p.Y > bh-60 || p.X < -(HilfeB-60) || p.Y < 0) {
+            _st.HelpPos = null;
+            return new Rectangle((bw-HilfeB)/2, (bh-HilfeH)/2, HilfeB, HilfeH);
+        }
+        return new Rectangle(p.X, p.Y, HilfeB, HilfeH);
+    }
+
+    // Das Kreuz oben rechts, und die Titelzeile daneben als Griff.
+    Rectangle HelpCloseRect(Rectangle r) {
+        return new Rectangle(r.Right-38, r.Y+10, KreuzG, KreuzG);
+    }
+    Rectangle HelpTitleRect(Rectangle r) {
+        return new Rectangle(r.X, r.Y, r.Width-48, GriffH);
+    }
+
+    // 🔴 Mindestens 60 px waagerecht sichtbar, und senkrecht nie ueber den
+    // oberen Rand hinaus: sonst zieht man den Kasten hinaus und kommt an
+    // die Titelzeile nicht mehr heran.
+    Point HelpClamp(Point p) {
+        int bw=_physWidth>0?_physWidth:Width, bh=_physHeight>0?_physHeight:Height;
+        int x = Math.Max(-(HilfeB-60), Math.Min(bw-60, p.X));
+        int y = Math.Max(0,            Math.Min(bh-60, p.Y));
+        return new Point(x, y);
+    }
+
+    void DrawHelp(Graphics g) {
+        Rectangle hr = HelpRect();
+        int pw=hr.Width, ph=hr.Height, px=hr.X, py=hr.Y;
         using(GraphicsPath p=RR(px,py,pw,ph,16))
         using(SolidBrush bg=new SolidBrush(Color.FromArgb(235,12,12,24))) g.FillPath(bg,p);
         using(GraphicsPath p=RR(px,py,pw,ph,16))
@@ -1844,7 +1922,19 @@ class ScreenOverlay : Form {
 
         int x=px+30,y=py+24;
         using(Font ft=new Font("Segoe UI",15f,FontStyle.Bold))
-        using(SolidBrush w=new SolidBrush(Color.White)) g.DrawString("MarkUp  —  Hilfe",ft,w,x,y);
+        using(SolidBrush w=new SolidBrush(Color.White)) g.DrawString("MarkUp  -  Hilfe",ft,w,x,y);
+        // FB-20260912-102455567-e140: Der eigene Weg zum
+        // Schliessen. Ohne ihn waere die Hilfe nach dem Wegfall
+        // des pauschalen Klicks nur noch ueber die Taste zu
+        // schliessen.
+        Rectangle kr = HelpCloseRect(hr);
+        using(SolidBrush kb=new SolidBrush(Color.FromArgb(40,255,255,255)))
+        using(GraphicsPath kp=RR(kr.X,kr.Y,kr.Width,kr.Height,6))
+            g.FillPath(kb,kp);
+        using(Pen kx=new Pen(Color.FromArgb(190,255,255,255),1.6f)) {
+            g.DrawLine(kx,kr.X+9,kr.Y+9,kr.Right-9,kr.Bottom-9);
+            g.DrawLine(kx,kr.Right-9,kr.Y+9,kr.X+9,kr.Bottom-9);
+        }
         y+=40;
 
         string[][] left={ new[]{"WERKZEUGE",""}, new[]{DrawState.FormatKey(_st.KPen),"Freihand"}, new[]{DrawState.FormatKey(_st.KArrow),"Pfeil"}, new[]{DrawState.FormatKey(_st.KRect),"Rechteck"}, new[]{DrawState.FormatKey(_st.KEll),"Ellipse"}, new[]{DrawState.FormatKey(_st.KText),"Text (Enter=fertig)"}, new[]{DrawState.FormatKey(_st.KHl),"Highlighter"}, new[]{DrawState.FormatKey(_st.KCen),"Zensur"}, new[]{DrawState.FormatKey(_st.KStamp),"Stempel (Rechtsklick=Auswahl)"}, new[]{DrawState.FormatKey(_st.KNumCircle),"Nummerierung"} };
@@ -1910,7 +2000,7 @@ class ScreenOverlay : Form {
 }
 
 // ── Hotkey Dialog ─────────────────────────────────────────────────────────────
-// FB-3792: Free key capture — any key allowed, no ComboBox restriction
+// FB-3792: Free key capture - any key allowed, no ComboBox restriction
 class HotkeyDialog : Form {
     DrawState _st;
     TextBox _cPen,_cArr,_cRct,_cEll,_cTxt,_cHl,_cCen,_cStamp,_cNumCircle,_cTray,_cPass,_cHelp,_cUndo,_cClear,_cShow,_cQuit;
@@ -2004,7 +2094,7 @@ class HotkeyDialog : Form {
         SetTB(_cUndo,Keys.Z); SetTB(_cClear,Keys.Control|Keys.Shift|Keys.X); SetTB(_cShow,Keys.Control|Keys.Shift|Keys.M); SetTB(_cQuit,Keys.Control|Keys.Shift|Keys.Q);
         CheckDuplicates();
     }
-    // FB-3792 v6: Capture ALL keys inside HotkeyDialog — prevent any leakage to FloatingBar/overlay
+    // FB-3792 v6: Capture ALL keys inside HotkeyDialog - prevent any leakage to FloatingBar/overlay
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
         // Let the focused TextBox's KeyDown handler capture the key
         // Return false = don't eat key at form level, let it reach control KeyDown
@@ -2039,7 +2129,7 @@ class FloatingBar : Form {
         BackColor=Color.FromArgb(18,18,28); Opacity=0.97; DoubleBuffered=true;
         StartPosition=FormStartPosition.Manual;
         AutoSize=true; AutoSizeMode=AutoSizeMode.GrowAndShrink;
-        // Shared tooltip — ShowAlways so it works even when overlay has focus
+        // Shared tooltip - ShowAlways so it works even when overlay has focus
         _tt = new ToolTip {
             ShowAlways   = true,
             AutoPopDelay = 8000,
@@ -2068,7 +2158,7 @@ class FloatingBar : Form {
 
     // MUP-234728 v6: Reverted to original sizes (50% reduction caused icon clipping)
     void Build() {
-        KeyPreview = true; // MUP-e0d2: Form sees KeyPress before child Buttons — required for text input
+        KeyPreview = true; // MUP-e0d2: Form sees KeyPress before child Buttons - required for text input
         FlowLayoutPanel fl=new FlowLayoutPanel{AutoSize=true,AutoSizeMode=AutoSizeMode.GrowAndShrink,FlowDirection=FlowDirection.LeftToRight,WrapContents=false,Padding=new Padding(4,4,4,4),BackColor=Color.Transparent};
 
         Panel grip=new Panel{Size=new Size(8,22),BackColor=Color.Transparent,Cursor=Cursors.SizeAll};
@@ -2088,10 +2178,10 @@ class FloatingBar : Form {
         Mark(_st.Tool); fl.Controls.Add(Div()); // FB-1452: Sync to loaded tool
 
         for(int i=0;i<COLS.Length;i++){Color c=COLS[i];Button b=CB(c);Button rb=b;Color rc=c;b.Click+=delegate{_st.Color=rc;_st.IsRainbow=false;HiCol(rb);_st.Fire();};_cbtns.Add(b);fl.Controls.Add(b);}
-        // Unicorn / Rainbow color button — MUP-e989: HotPink ForeColor for visibility
+        // Unicorn / Rainbow color button - MUP-e989: HotPink ForeColor for visibility
         Button ub2=new Button{Text="\uD83E\uDD84",Size=new Size(28,28),Margin=new Padding(1,1,1,1),FlatStyle=FlatStyle.Flat,Cursor=Cursors.Hand,Font=new Font("Segoe UI Emoji",12f),ForeColor=Color.FromArgb(255,105,180)}; // MUP-afae: 28x28+12f (was 22x22+10f, emoji clipped) + MUP-c9b9: uniform 28px height
         ub2.FlatAppearance.BorderSize=0;ub2.FlatAppearance.BorderColor=Color.White;ub2.BackColor=Color.FromArgb(42,42,62);
-        _tt.SetToolTip(ub2,"Einhornfarbe (Regenbogen) — Rechtsklick: Statisch/Animiert");
+        _tt.SetToolTip(ub2,"Einhornfarbe (Regenbogen) - Rechtsklick: Statisch/Animiert");
         ub2.Click+=delegate{_st.IsRainbow=true;_st.IsAnimatedRainbow=false;HiCol(ub2);_st.Fire();};
         // MUP-e989: Right-click context menu for Static vs Animated rainbow
         ub2.MouseUp+=delegate(object sx,MouseEventArgs ex){
@@ -2146,7 +2236,7 @@ class FloatingBar : Form {
         _helpBtn.Click+=delegate{_st.ShowHelp=!_st.ShowHelp;_st.Fire();};
         fl.Controls.Add(_helpBtn);
 
-        // MUP-13df: Pin button — left-click=Desktop shortcut, right-click=more options
+        // MUP-13df: Pin button - left-click=Desktop shortcut, right-click=more options
         Button pinBtn=TB("📌","Verknüpfung erstellen (Rechtsklick=Optionen)");
         pinBtn.Click+=delegate{_app.CreateDesktopShortcut();};
         pinBtn.MouseUp+=delegate(object sx,MouseEventArgs ex){
@@ -2220,7 +2310,7 @@ class FloatingBar : Form {
         if(k==_st.KClear)                   {_app.ClearAll();return true;}
         if(k==_st.KPass)                    {_st.PassThru=!_st.PassThru;MouseHookManager.SwallowClicks=!_st.PassThru;MouseHookManager.Active=!_st.PassThru;UpdatePassBtn();_st.Fire();return true;}
         if(k==_st.KTray)                    {_app.SendToTray();return true;}
-        // FB-a295 v3: Removed hardcoded ESC toggle — use configurable KPass instead
+        // FB-a295 v3: Removed hardcoded ESC toggle - use configurable KPass instead
         // FB-a295: Use configurable KQuit + KShow instead of hardcoded Ctrl+Q
         if(k==_st.KQuit)                    {Application.Exit();return true;}
         if(k==_st.KShow)                    {_app.Restore();return true;}
@@ -2249,19 +2339,19 @@ class FloatingBar : Form {
         _passBtn.ForeColor = Color.White;
         // FB-a295: Consistent tooltip format
         _tt.SetToolTip(_passBtn, _st.PassThru
-            ? "Markup INAKTIV — klicken um Markup zu aktivieren ("+DrawState.FormatKey(_st.KPass)+")"
-            : "Markup AKTIV — klicken um Markup zu deaktivieren ("+DrawState.FormatKey(_st.KPass)+")");
+            ? "Markup INAKTIV - klicken um Markup zu aktivieren ("+DrawState.FormatKey(_st.KPass)+")"
+            : "Markup AKTIV - klicken um Markup zu deaktivieren ("+DrawState.FormatKey(_st.KPass)+")");
     }
 
     // MUP-a295: Refresh all toolbar tooltips after shortcut changes in HotkeyDialog
     public void RefreshTooltips() {
-        // Tool buttons — update shortcut label in tooltip
+        // Tool buttons - update shortcut label in tooltip
         for (int i = 0; i < TOOLS.Length; i++) {
             DrawTool t = TOOLS[i];
             if (_tbtns.ContainsKey(t))
                 _tt.SetToolTip(_tbtns[t], TNAMES[i]+" ("+_st.HotkeyLabel(t)+")"+(HasToolOptions(t)?"  (Rechtsklick=Optionen)":""));
         }
-        // Action buttons — update shortcut labels
+        // Action buttons - update shortcut labels
         UpdatePassBtn(); // passBtn tooltip is updated inside UpdatePassBtn
         if (_undoBtn != null)  _tt.SetToolTip(_undoBtn,  "Rückgängig (Ctrl+"+DrawState.FormatKey(_st.KUndo)+")");
         if (_helpBtn != null)  _tt.SetToolTip(_helpBtn,  "Hilfe ("+DrawState.FormatKey(_st.KHelp)+")");
@@ -2405,7 +2495,7 @@ class FloatingBar : Form {
             reset.ForeColor=Color.White; reset.BackColor=Color.FromArgb(30,30,48);
             reset.Click+=delegate{_st.NextNumCircle=1;_st.Fire();};
             cm.Items.Add(reset);
-            // FB-8e36 v3: Inline ToolStripTextBox instead of modal dialog — no overlay blocking
+            // FB-8e36 v3: Inline ToolStripTextBox instead of modal dialog - no overlay blocking
             ToolStripLabel setLbl = new ToolStripLabel("Setzen auf:"){ ForeColor=Color.FromArgb(200,200,220), Font=new Font("Segoe UI",9f) };
             cm.Items.Add(setLbl);
             ToolStripTextBox setTb = new ToolStripTextBox();

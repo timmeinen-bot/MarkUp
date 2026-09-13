@@ -1,7 +1,7 @@
 # MarkUp
 
 Ein transparentes Annotationswerkzeug für den Windows-Bildschirm. MarkUp legt
-sich über alles, was gerade zu sehen ist — Präsentation, Tabelle, Video — und
+sich über alles, was gerade zu sehen ist - Präsentation, Tabelle, Video - und
 lässt darauf zeichnen, ohne die darunterliegende Anwendung zu berühren.
 
 ![Lizenz](https://img.shields.io/badge/Lizenz-MIT-blue)
@@ -22,7 +22,7 @@ lässt darauf zeichnen, ohne die darunterliegende Anwendung zu berühren.
 
 Dazu: **Markup ein/aus** lässt Klicks wieder zur darunterliegenden Anwendung
 durch, ohne das Gezeichnete zu verlieren. Auf mehreren Bildschirmen ist die
-Werkzeugleiste überall gleichzeitig aktiv — gezeichnet wird dort, wo der Zeiger
+Werkzeugleiste überall gleichzeitig aktiv - gezeichnet wird dort, wo der Zeiger
 ist.
 
 Alle Tasten sind frei belegbar; die Hilfe (Standard: `F1`) zeigt die aktuelle
@@ -45,7 +45,7 @@ angeboten. Der Name in der Auswahl ergibt sich aus dem Dateinamen.
 
 ## Lizenz
 
-MIT — siehe [LICENSE](LICENSE).
+MIT - siehe [LICENSE](LICENSE).
 
 Die mitgelieferten Emoji-Grafiken stammen aus **Twemoji** und stehen unter
 **CC BY 4.0**. Einzelheiten und die vollständige Namensnennung:

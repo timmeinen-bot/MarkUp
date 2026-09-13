@@ -7,10 +7,10 @@
     <Nullable>disable</Nullable>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <!-- FB-2fa9 (Veroeffentlichung): self-contained — .NET-8-Runtime ist eingebettet,
+    <!-- FB-2fa9 (Veroeffentlichung): self-contained - .NET-8-Runtime ist eingebettet,
          Nutzer brauchen NICHTS zu installieren. Single-File + Kompression haelt die
          EXE bei ~35 MB statt ~75 MB. (Vorher framework-dependent/MUP-6c1c ~5MB, aber
-         das setzt eine installierte Runtime voraus — fuer die oeffentliche Verteilung
+         das setzt eine installierte Runtime voraus - fuer die oeffentliche Verteilung
          untauglich.) -->
     <SelfContained>true</SelfContained>
     <PublishSingleFile>true</PublishSingleFile>
@@ -37,7 +37,7 @@
     <FileVersion>1.0.0.0</FileVersion>
 </PropertyGroup>
   <ItemGroup>
-    <!-- MUP-234715 v7: EmbeddedResource removed — logos now hardcoded as base64 in Program.cs -->
+    <!-- MUP-234715 v7: EmbeddedResource removed - logos now hardcoded as base64 in Program.cs -->
     <!-- Content copy kept for development/debug runs (emoji PNGs still loaded from filesystem) -->
     <Content Include="stamps\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
