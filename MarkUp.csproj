@@ -37,7 +37,12 @@
     <FileVersion>1.0.0.0</FileVersion>
 </PropertyGroup>
   <ItemGroup>
-    <!-- MUP-234715 v7: EmbeddedResource removed - logos now hardcoded as base64 in Program.cs -->
+    <!-- MUP-234715 v7: EmbeddedResource entfernt. -->
+    <!-- MFL-20260914-100935122-7b23: der alte Satz sagte, die Logos
+         staenden als base64 im Quelltext. Seit der Bereinigung stimmt
+         das nicht mehr - LadeLogosAusOrdner(stampDir) liest sie zur
+         Laufzeit aus stamps/. Wer den veroeffentlichten Code liest,
+         suchte sonst nach etwas, das es nicht gibt. -->
     <!-- Content copy kept for development/debug runs (emoji PNGs still loaded from filesystem) -->
     <Content Include="stamps\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
