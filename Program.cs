@@ -831,7 +831,7 @@ class SplashScreen : Form {
         DoubleBuffered = true;
         // Status label (only child - everything else painted)
         _status = new Label {
-            Text = "Starte...",
+            Text = "Starting...",
             Font = new Font("Segoe UI", 9f),
             ForeColor = Color.FromArgb(220, 220, 240),
             AutoSize = false, Size = new Size(360, 20),
@@ -1160,7 +1160,7 @@ class MarkUpApp {
         long splashStartTick = Environment.TickCount64; // MUP-73d3: Track start for minimum display time
         SplashScreen splash = new SplashScreen();
         splash.Show();
-        splash.SetProgress(20, "Initialisiere...");
+        splash.SetProgress(20, "Initialising...");
 
         // FB-1452: Load saved settings before building UI
         LoadSettings();
@@ -1173,7 +1173,7 @@ class MarkUpApp {
         ScreenOverlay ov = new ScreenOverlay(virt, _state);
         _overlays.Add(ov);
         ov.Show();
-        splash.SetProgress(60, "Toolbar aufbauen...");
+        splash.SetProgress(60, "Building the toolbar...");
 
         _bar = new FloatingBar(_state, _overlays, this);
         _bar.Show();
@@ -1200,7 +1200,7 @@ class MarkUpApp {
         cm.BackColor=Color.FromArgb(30,30,46); cm.ForeColor=Color.White;
         cm.Renderer=new ToolStripProfessionalRenderer(new DarkColorTable());
         // FB-a295: Use FormatKey() for shortcut display (ShowShortcutKeys uses Keys.ToString() which shows "Oem7" instead of "Ä")
-        var miShow = new ToolStripMenuItem("&Anzeigen\t" + DrawState.FormatKey(_state.KShow), null, (s,e) => Restore()) { ShowShortcutKeys=false };
+        var miShow = new ToolStripMenuItem("&Show\t" + DrawState.FormatKey(_state.KShow), null, (s,e) => Restore()) { ShowShortcutKeys=false };
         var miClear = new ToolStripMenuItem("Clear &all\t" + DrawState.FormatKey(_state.KClear), null, (s,e) => ClearAll()) { ShowShortcutKeys=false };
         var miQuit = new ToolStripMenuItem("&Quit\t" + DrawState.FormatKey(_state.KQuit), null, (s,e) => Application.Exit()) { ShowShortcutKeys=false };
         miShow.ForeColor=Color.White; miShow.BackColor=Color.FromArgb(30,30,46);
@@ -1210,7 +1210,7 @@ class MarkUpApp {
         _tray = new NotifyIcon { Text="MarkUp", Icon=MakeAppIcon(), Visible=false, ContextMenuStrip=cm };
         _tray.DoubleClick += (s,e) => Restore();
 
-        splash.SetProgress(100, "Bereit!");
+        splash.SetProgress(100, "Ready!");
         // MUP-73d3: Minimum 1.5s display time so rainbow animation is visible
         long splashElapsed = Environment.TickCount64 - splashStartTick;
         long remaining = 2000 - splashElapsed; // MUP-73d3: 2s minimum splash display
@@ -1334,7 +1334,7 @@ class MarkUpApp {
         ContextMenuStrip cm = new ContextMenuStrip();
         cm.BackColor=Color.FromArgb(30,30,46); cm.ForeColor=Color.White;
         cm.Renderer=new ToolStripProfessionalRenderer(new DarkColorTable());
-        var miShow = new ToolStripMenuItem("&Anzeigen\t" + DrawState.FormatKey(_state.KShow), null, (s,e) => Restore()) { ShowShortcutKeys=false };
+        var miShow = new ToolStripMenuItem("&Show\t" + DrawState.FormatKey(_state.KShow), null, (s,e) => Restore()) { ShowShortcutKeys=false };
         var miClear = new ToolStripMenuItem("Clear &all\t" + DrawState.FormatKey(_state.KClear), null, (s,e) => ClearAll()) { ShowShortcutKeys=false };
         var miQuit = new ToolStripMenuItem("&Quit\t" + DrawState.FormatKey(_state.KQuit), null, (s,e) => Application.Exit()) { ShowShortcutKeys=false };
         miShow.ForeColor=Color.White; miShow.BackColor=Color.FromArgb(30,30,46);
@@ -2050,7 +2050,7 @@ class HotkeyDialog : Form {
         for(int i=0;i<19;i++)tbl.RowStyles.Add(new RowStyle(SizeType.Absolute,32));
         _cPen =MRow(tbl,0,"Freehand",  _st.KPen);  _cArr =MRow(tbl,1,"Arrow",    _st.KArrow);
         _cRct =MRow(tbl,2,"Rectangle",  _st.KRect);  _cEll =MRow(tbl,3,"Circle",    _st.KEll);
-        _cTxt =MRow(tbl,4,"Text",      _st.KText);  _cHl  =MRow(tbl,5,"Markieren",_st.KHl);
+        _cTxt =MRow(tbl,4,"Text",      _st.KText);  _cHl  =MRow(tbl,5,"Highlight",_st.KHl);
         _cCen =MRow(tbl,6,"Redaction",    _st.KCen);   _cStamp=MRow(tbl,7,"Stamp", _st.KStamp);
         _cNumCircle=MRow(tbl,8,"Numbering",_st.KNumCircle);
         tbl.Controls.Add(new Label{Text="\u2500\u2500 Actions \u2500\u2500",ForeColor=Color.FromArgb(100,100,140),TextAlign=ContentAlignment.MiddleLeft,Dock=DockStyle.Fill},0,9);
@@ -2059,7 +2059,7 @@ class HotkeyDialog : Form {
         _cTray=MRow(tbl,10,"Tray",      _st.KTray);  _cPass=MRow(tbl,11,"Markup",_st.KPass); _cHelp=MRow(tbl,12,"Help",_st.KHelp);
         // FB-a295: 4 new configurable action shortcuts
         _cUndo=MRow(tbl,13,"Undo", _st.KUndo);  _cClear=MRow(tbl,14,"Clear all",_st.KClear);
-        _cShow=MRow(tbl,15,"Anzeigen",   _st.KShow);  _cQuit=MRow(tbl,16,"Quit",_st.KQuit);
+        _cShow=MRow(tbl,15,"Show",   _st.KShow);  _cQuit=MRow(tbl,16,"Quit",_st.KQuit);
         _warn=new Label{Text="\u26A0 Duplicate key detected!",ForeColor=Color.FromArgb(255,100,100),Font=new Font("Segoe UI",8.5f,FontStyle.Bold),Dock=DockStyle.Fill,TextAlign=ContentAlignment.MiddleLeft,Visible=false};
         tbl.Controls.Add(_warn,0,17); tbl.SetColumnSpan(_warn,2);
         tbl.Controls.Add(new Label{Text="Click a field, then press a key",ForeColor=Color.FromArgb(90,90,120),Font=new Font("Consolas",8f),Dock=DockStyle.Fill,TextAlign=ContentAlignment.MiddleLeft},0,18);
@@ -2164,7 +2164,7 @@ class FloatingBar : Form {
 
         for(int i=0;i<TOOLS.Length;i++){
             DrawTool t=TOOLS[i];int ii=i;
-            Button b=TB(ICONS[i],TNAMES[ii]+" ("+_st.HotkeyLabel(t)+")"+(HasToolOptions(t)?"  (Rechtsklick=Optionen)":"")); // MUP-31bb: Shortcut in parentheses
+            Button b=TB(ICONS[i],TNAMES[ii]+" ("+_st.HotkeyLabel(t)+")"+(HasToolOptions(t)?"  (right-click = options)":"")); // MUP-31bb: Shortcut in parentheses
             b.Click+=delegate{Pick(t);};
             // Right-click: tool-specific context menu or stamp picker
             DrawTool ct=t; Button cb2=b;
@@ -2177,16 +2177,16 @@ class FloatingBar : Form {
         // Unicorn / Rainbow color button - MUP-e989: HotPink ForeColor for visibility
         Button ub2=new Button{Text="\uD83E\uDD84",Size=new Size(28,28),Margin=new Padding(1,1,1,1),FlatStyle=FlatStyle.Flat,Cursor=Cursors.Hand,Font=new Font("Segoe UI Emoji",12f),ForeColor=Color.FromArgb(255,105,180)}; // MUP-afae: 28x28+12f (was 22x22+10f, emoji clipped) + MUP-c9b9: uniform 28px height
         ub2.FlatAppearance.BorderSize=0;ub2.FlatAppearance.BorderColor=Color.White;ub2.BackColor=Color.FromArgb(42,42,62);
-        _tt.SetToolTip(ub2,"Einhornfarbe (Regenbogen) - Rechtsklick: Statisch/Animiert");
+        _tt.SetToolTip(ub2,"Unicorn colour (rainbow) - right-click: static/animated");
         ub2.Click+=delegate{_st.IsRainbow=true;_st.IsAnimatedRainbow=false;HiCol(ub2);_st.Fire();};
         // MUP-e989: Right-click context menu for Static vs Animated rainbow
         ub2.MouseUp+=delegate(object sx,MouseEventArgs ex){
             if(ex.Button!=MouseButtons.Right) return;
             ContextMenuStrip cm=new ContextMenuStrip();
             cm.BackColor=Color.FromArgb(30,30,46);cm.ForeColor=Color.White;cm.Renderer=new ToolStripProfessionalRenderer(new DarkColorTable());
-            ToolStripMenuItem mi1=new ToolStripMenuItem("Statisch (Regenbogen)");
+            ToolStripMenuItem mi1=new ToolStripMenuItem("Static (rainbow)");
             mi1.Click+=delegate{_st.IsRainbow=true;_st.IsAnimatedRainbow=false;HiCol(ub2);_st.Fire();};
-            ToolStripMenuItem mi2=new ToolStripMenuItem("Animiert (Farbwechsel)");
+            ToolStripMenuItem mi2=new ToolStripMenuItem("Animated (colour cycle)");
             mi2.Click+=delegate{_st.IsRainbow=true;_st.IsAnimatedRainbow=true;HiCol(ub2);_st.Fire();};
             cm.Items.Add(mi1);cm.Items.Add(mi2);
             MouseHookManager.Active=false;
@@ -2211,7 +2211,7 @@ class FloatingBar : Form {
         fl.Controls.Add(cx); fl.Controls.Add(Div());
 
         // FB-a295: Renamed "Durchlass" to "Markup" throughout
-        _passBtn=TB("🖱","Markup ein/aus ("+DrawState.FormatKey(_st.KPass)+")");
+        _passBtn=TB("🖱","Markup on/off ("+DrawState.FormatKey(_st.KPass)+")");
         _passBtn.Size = new Size(28, 28);
         _passBtn.Click+=delegate{_st.PassThru=!_st.PassThru;MouseHookManager.SwallowClicks=!_st.PassThru;MouseHookManager.Active=!_st.PassThru;UpdatePassBtn();_st.Fire();};
         UpdatePassBtn(); // MUP-234921: Sync button state at startup
@@ -2254,7 +2254,7 @@ class FloatingBar : Form {
         fl.Controls.Add(Div());
 
         // FB-a295: Consistent tooltip format using FormatKey()
-        _trayBtn=TB("—","In Tray ("+DrawState.FormatKey(_st.KTray)+")");
+        _trayBtn=TB("—","To tray ("+DrawState.FormatKey(_st.KTray)+")");
         _trayBtn.Click+=delegate{_app.SendToTray();};
         fl.Controls.Add(_trayBtn);
 
@@ -2345,13 +2345,13 @@ class FloatingBar : Form {
         for (int i = 0; i < TOOLS.Length; i++) {
             DrawTool t = TOOLS[i];
             if (_tbtns.ContainsKey(t))
-                _tt.SetToolTip(_tbtns[t], TNAMES[i]+" ("+_st.HotkeyLabel(t)+")"+(HasToolOptions(t)?"  (Rechtsklick=Optionen)":""));
+                _tt.SetToolTip(_tbtns[t], TNAMES[i]+" ("+_st.HotkeyLabel(t)+")"+(HasToolOptions(t)?"  (right-click = options)":""));
         }
         // Action buttons - update shortcut labels
         UpdatePassBtn(); // passBtn tooltip is updated inside UpdatePassBtn
         if (_undoBtn != null)  _tt.SetToolTip(_undoBtn,  "Undo (Ctrl+"+DrawState.FormatKey(_st.KUndo)+")");
         if (_helpBtn != null)  _tt.SetToolTip(_helpBtn,  "Help ("+DrawState.FormatKey(_st.KHelp)+")");
-        if (_trayBtn != null)  _tt.SetToolTip(_trayBtn,  "In Tray ("+DrawState.FormatKey(_st.KTray)+")");
+        if (_trayBtn != null)  _tt.SetToolTip(_trayBtn,  "To tray ("+DrawState.FormatKey(_st.KTray)+")");
         if (_clearBtn != null) _tt.SetToolTip(_clearBtn, "Clear all ("+DrawState.FormatKey(_st.KClear)+")");
         if (_quitBtn != null)  _tt.SetToolTip(_quitBtn,  "Quit ("+DrawState.FormatKey(_st.KQuit)+")");
     }
@@ -2386,52 +2386,52 @@ class FloatingBar : Form {
         if (tool == DrawTool.Pen) {
             // Dash style options
             cm.Items.Add(new ToolStripLabel("Line style"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
-            AddRadio(cm, "Durchgezogen", _st.PenDash==DashStyle.Solid,   ()=>{_st.PenDash=DashStyle.Solid;});
-            AddRadio(cm, "Gestrichelt",  _st.PenDash==DashStyle.Dash,    ()=>{_st.PenDash=DashStyle.Dash;});
-            AddRadio(cm, "Gepunktet",    _st.PenDash==DashStyle.Dot,     ()=>{_st.PenDash=DashStyle.Dot;});
+            AddRadio(cm, "Solid", _st.PenDash==DashStyle.Solid,   ()=>{_st.PenDash=DashStyle.Solid;});
+            AddRadio(cm, "Dashed",  _st.PenDash==DashStyle.Dash,    ()=>{_st.PenDash=DashStyle.Dash;});
+            AddRadio(cm, "Dotted",    _st.PenDash==DashStyle.Dot,     ()=>{_st.PenDash=DashStyle.Dot;});
             cm.Items.Add(new ToolStripSeparator());
             cm.Items.Add(new ToolStripLabel("Line caps"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
-            AddRadio(cm, "Rund",   _st.PenCap==LineCap.Round,  ()=>{_st.PenCap=LineCap.Round;});
-            AddRadio(cm, "Eckig",  _st.PenCap==LineCap.Square, ()=>{_st.PenCap=LineCap.Square;});
+            AddRadio(cm, "Round",   _st.PenCap==LineCap.Round,  ()=>{_st.PenCap=LineCap.Round;});
+            AddRadio(cm, "Square",  _st.PenCap==LineCap.Square, ()=>{_st.PenCap=LineCap.Square;});
         }
         else if (tool == DrawTool.Arrow) {
             cm.Items.Add(new ToolStripLabel("Arrowhead"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
             AddRadio(cm, "\u25B6 Filled",  _st.ArrowHeadStyle==ArrowHead.Filled, ()=>{_st.ArrowHeadStyle=ArrowHead.Filled;});
-            AddRadio(cm, "\u25B7 Offen",      _st.ArrowHeadStyle==ArrowHead.Open,   ()=>{_st.ArrowHeadStyle=ArrowHead.Open;});
-            AddRadio(cm, "\u25C6 Raute",      _st.ArrowHeadStyle==ArrowHead.Diamond,()=>{_st.ArrowHeadStyle=ArrowHead.Diamond;});
-            AddRadio(cm, "\u25CF Punkt",      _st.ArrowHeadStyle==ArrowHead.Dot,    ()=>{_st.ArrowHeadStyle=ArrowHead.Dot;});
+            AddRadio(cm, "\u25B7 Open",      _st.ArrowHeadStyle==ArrowHead.Open,   ()=>{_st.ArrowHeadStyle=ArrowHead.Open;});
+            AddRadio(cm, "\u25C6 Diamond",      _st.ArrowHeadStyle==ArrowHead.Diamond,()=>{_st.ArrowHeadStyle=ArrowHead.Diamond;});
+            AddRadio(cm, "\u25CF Dot",      _st.ArrowHeadStyle==ArrowHead.Dot,    ()=>{_st.ArrowHeadStyle=ArrowHead.Dot;});
             cm.Items.Add(new ToolStripSeparator());
-            cm.Items.Add(new ToolStripLabel("Richtung"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
-            AddRadio(cm, "\u2192 Einseitig",    !_st.ArrowDual, ()=>{_st.ArrowDual=false;});
-            AddRadio(cm, "\u2194 Beidseitig",   _st.ArrowDual,  ()=>{_st.ArrowDual=true;});
+            cm.Items.Add(new ToolStripLabel("Direction"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
+            AddRadio(cm, "\u2192 Single",    !_st.ArrowDual, ()=>{_st.ArrowDual=false;});
+            AddRadio(cm, "\u2194 Double",   _st.ArrowDual,  ()=>{_st.ArrowDual=true;});
         }
         else if (tool == DrawTool.Rect) {
-            cm.Items.Add(new ToolStripLabel("Ecken"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
-            AddRadio(cm, "Eckig (0)",          _st.RectRadius==0,  ()=>{_st.RectRadius=0;});
-            AddRadio(cm, "Abgerundet (12)",    _st.RectRadius==12, ()=>{_st.RectRadius=12;});
-            AddRadio(cm, "Stark gerundet (24)",_st.RectRadius==24, ()=>{_st.RectRadius=24;});
+            cm.Items.Add(new ToolStripLabel("Corners"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
+            AddRadio(cm, "Square (0)",          _st.RectRadius==0,  ()=>{_st.RectRadius=0;});
+            AddRadio(cm, "Rounded (12)",    _st.RectRadius==12, ()=>{_st.RectRadius=12;});
+            AddRadio(cm, "Very rounded (24)",_st.RectRadius==24, ()=>{_st.RectRadius=24;});
             cm.Items.Add(new ToolStripSeparator());
             cm.Items.Add(new ToolStripLabel("Fill"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
-            AddRadio(cm, "Nur Rahmen",    !_st.RectFill, ()=>{_st.RectFill=false;});
-            AddRadio(cm, "Halbtransparent", _st.RectFill, ()=>{_st.RectFill=true;});
+            AddRadio(cm, "Outline only",    !_st.RectFill, ()=>{_st.RectFill=false;});
+            AddRadio(cm, "Semi-transparent", _st.RectFill, ()=>{_st.RectFill=true;});
         }
         else if (tool == DrawTool.Ellipse) {
             // MUP-234826: Ellipse fill option
             cm.Items.Add(new ToolStripLabel("Fill"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
-            AddRadio(cm, "Nur Rahmen",      !_st.EllipseFill, ()=>{_st.EllipseFill=false;});
-            AddRadio(cm, "Halbtransparent",  _st.EllipseFill,  ()=>{_st.EllipseFill=true;});
+            AddRadio(cm, "Outline only",      !_st.EllipseFill, ()=>{_st.EllipseFill=false;});
+            AddRadio(cm, "Semi-transparent",  _st.EllipseFill,  ()=>{_st.EllipseFill=true;});
         }
         else if (tool == DrawTool.Text) {
             // MUP-234826: Text size option
             cm.Items.Add(new ToolStripLabel("Font size"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
-            AddRadio(cm, "Klein (14pt)",  _st.TextSize==14f, ()=>{_st.TextSize=14f;});
+            AddRadio(cm, "Small (14pt)",  _st.TextSize==14f, ()=>{_st.TextSize=14f;});
             AddRadio(cm, "Normal (20pt)", _st.TextSize==20f, ()=>{_st.TextSize=20f;});
-            AddRadio(cm, "Gross (32pt)",  _st.TextSize==32f, ()=>{_st.TextSize=32f;});
-            AddRadio(cm, "Riesig (48pt)", _st.TextSize==48f, ()=>{_st.TextSize=48f;});
+            AddRadio(cm, "Large (32pt)",  _st.TextSize==32f, ()=>{_st.TextSize=32f;});
+            AddRadio(cm, "Huge (48pt)", _st.TextSize==48f, ()=>{_st.TextSize=48f;});
         }
         else if (tool == DrawTool.Highlight) {
             // MUP-234826: Highlight opacity option
-            cm.Items.Add(new ToolStripLabel("Deckkraft"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
+            cm.Items.Add(new ToolStripLabel("Opacity"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
             // MUP-133846: Correct percentage labels (alpha/255 = opacity%)
             AddRadio(cm, "10%",  _st.HighlightAlpha==25f,  ()=>{_st.HighlightAlpha=25f;});
             AddRadio(cm, "25%",  _st.HighlightAlpha==64f,  ()=>{_st.HighlightAlpha=64f;});
@@ -2441,17 +2441,17 @@ class FloatingBar : Form {
         }
         else if (tool == DrawTool.Censor) {
             // MUP-234826: Censor methods + intensity
-            cm.Items.Add(new ToolStripLabel("Methode"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
-            AddRadio(cm, "Schwarzer Balken", _st.CensorMode==CensorMethod.BlackBar, ()=>{_st.CensorMode=CensorMethod.BlackBar;});
-            AddRadio(cm, "Pixeliert", _st.CensorMode==CensorMethod.Pixelate, ()=>{_st.CensorMode=CensorMethod.Pixelate;});
-            AddRadio(cm, "Diagonal-Schraffur", _st.CensorMode==CensorMethod.DiagonalHatch, ()=>{_st.CensorMode=CensorMethod.DiagonalHatch;});
-            AddRadio(cm, "Kreuz-Schraffur (rot)", _st.CensorMode==CensorMethod.CrossHatch, ()=>{_st.CensorMode=CensorMethod.CrossHatch;});
-            AddRadio(cm, "Weichzeichner", _st.CensorMode==CensorMethod.Blur, ()=>{_st.CensorMode=CensorMethod.Blur;});
+            cm.Items.Add(new ToolStripLabel("Method"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
+            AddRadio(cm, "Black bar", _st.CensorMode==CensorMethod.BlackBar, ()=>{_st.CensorMode=CensorMethod.BlackBar;});
+            AddRadio(cm, "Pixelated", _st.CensorMode==CensorMethod.Pixelate, ()=>{_st.CensorMode=CensorMethod.Pixelate;});
+            AddRadio(cm, "Diagonal hatch", _st.CensorMode==CensorMethod.DiagonalHatch, ()=>{_st.CensorMode=CensorMethod.DiagonalHatch;});
+            AddRadio(cm, "Cross hatch (red)", _st.CensorMode==CensorMethod.CrossHatch, ()=>{_st.CensorMode=CensorMethod.CrossHatch;});
+            AddRadio(cm, "Blur", _st.CensorMode==CensorMethod.Blur, ()=>{_st.CensorMode=CensorMethod.Blur;});
             cm.Items.Add(new ToolStripSeparator());
             cm.Items.Add(new ToolStripLabel("Intensity"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
-            AddRadio(cm, "Leicht", _st.CensorLevel==CensorIntensity.Light, ()=>{_st.CensorLevel=CensorIntensity.Light;});
+            AddRadio(cm, "Light", _st.CensorLevel==CensorIntensity.Light, ()=>{_st.CensorLevel=CensorIntensity.Light;});
             AddRadio(cm, "Normal", _st.CensorLevel==CensorIntensity.Medium, ()=>{_st.CensorLevel=CensorIntensity.Medium;});
-            AddRadio(cm, "Stark", _st.CensorLevel==CensorIntensity.Heavy, ()=>{_st.CensorLevel=CensorIntensity.Heavy;});
+            AddRadio(cm, "Heavy", _st.CensorLevel==CensorIntensity.Heavy, ()=>{_st.CensorLevel=CensorIntensity.Heavy;});
         }
         else if (tool == DrawTool.Stamp) {
             // ── Image stamps section ──
@@ -2471,7 +2471,7 @@ class FloatingBar : Form {
             cm.Items.Add(new ToolStripLabel("Emoji stamps"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
             // MUP-234951: Expanded emoji set (20 emojis)
             string[] stamps = { "\u2714","\u274C","\u2757","\u2753","\u2B50","\uD83D\uDD25","\uD83D\uDC4D","\uD83D\uDC4E","\uD83D\uDCA1","\u26A0","\uD83D\uDD12","\u2764","\uD83D\uDE80","\uD83C\uDFAF","\uD83D\uDCDD","\uD83C\uDF89","\uD83D\uDED1","\uD83D\uDD04","\uD83D\uDCCC","\uD83E\uDD84","\uD83D\uDCA9","\uD83E\uDECF","\uD83D\uDD95" };
-            string[] names  = { "Check mark","Kreuz","Ausrufezeichen","Fragezeichen","Stern","Feuer","Daumen hoch","Daumen runter","Light bulb","Warning","Schloss","Herz","Rakete","Zielscheibe","Notiz","Party","Stop","Refresh","Pin","Einhorn","Kacke","Esel","Mittelfinger" };
+            string[] names  = { "Check mark","Cross","Exclamation mark","Question mark","Star","Fire","Thumbs up","Thumbs down","Light bulb","Warning","Lock","Heart","Rocket","Target","Note","Party","Stop","Refresh","Pin","Unicorn","Poop","Donkey","Middle finger" };
             for (int i=0;i<stamps.Length;i++) {
                 string em=stamps[i]; string nm2=names[i]; bool sel2 = !_st.IsImageStamp && _st.StampEmoji==em;
                 ToolStripMenuItem mi = new ToolStripMenuItem(em+"  "+nm2);
@@ -2482,23 +2482,23 @@ class FloatingBar : Form {
         }
         else if (tool == DrawTool.NumberedCircle) {
             // MUP-20260328-170558899-8e36: Numbered circle tool options
-            cm.Items.Add(new ToolStripLabel("F\u00FCllung"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
-            AddRadio(cm, "Nur Rahmen",      !_st.NumCircleFill, ()=>{_st.NumCircleFill=false;});
-            AddRadio(cm, "Halbtransparent",  _st.NumCircleFill,  ()=>{_st.NumCircleFill=true;});
+            cm.Items.Add(new ToolStripLabel("Fill"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
+            AddRadio(cm, "Outline only",      !_st.NumCircleFill, ()=>{_st.NumCircleFill=false;});
+            AddRadio(cm, "Semi-transparent",  _st.NumCircleFill,  ()=>{_st.NumCircleFill=true;});
             cm.Items.Add(new ToolStripSeparator());
-            cm.Items.Add(new ToolStripLabel("Z\u00E4hler"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
-            ToolStripMenuItem reset = new ToolStripMenuItem("Zur\u00FCcksetzen auf 1");
+            cm.Items.Add(new ToolStripLabel("Counter"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
+            ToolStripMenuItem reset = new ToolStripMenuItem("Reset to 1");
             reset.ForeColor=Color.White; reset.BackColor=Color.FromArgb(30,30,48);
             reset.Click+=delegate{_st.NextNumCircle=1;_st.Fire();};
             cm.Items.Add(reset);
             // FB-8e36 v3: Inline ToolStripTextBox instead of modal dialog - no overlay blocking
-            ToolStripLabel setLbl = new ToolStripLabel("Setzen auf:"){ ForeColor=Color.FromArgb(200,200,220), Font=new Font("Segoe UI",9f) };
+            ToolStripLabel setLbl = new ToolStripLabel("Set to:"){ ForeColor=Color.FromArgb(200,200,220), Font=new Font("Segoe UI",9f) };
             cm.Items.Add(setLbl);
             ToolStripTextBox setTb = new ToolStripTextBox();
             setTb.Text=_st.NextNumCircle.ToString();
             setTb.BackColor=Color.FromArgb(42,42,62); setTb.ForeColor=Color.White;
             setTb.Font=new Font("Segoe UI",10f); setTb.Size=new Size(60,24);
-            setTb.ToolTipText="Zahl eingeben + Enter";
+            setTb.ToolTipText="Type a number, then Enter";
             setTb.KeyDown+=(s2,e2)=>{
                 if(e2.KeyCode==Keys.Enter){
                     if(int.TryParse(setTb.Text,out int v)&&v>=1&&v<=9999){_st.NextNumCircle=v;_st.Fire();}
