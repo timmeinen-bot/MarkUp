@@ -1,5 +1,8 @@
 # MarkUp
 
+<img src="assets/eselchen-labs.png" align="right" width="110" alt="Eselchen Labs">
+
+
 A transparent annotation tool for the Windows desktop. MarkUp sits on top of
 whatever is currently on screen — a presentation, a spreadsheet, a video — and
 lets you draw over it without touching the application underneath.
