@@ -19,3 +19,5 @@ CLAUDE.md
 __pycache__/
 installer/
 build_installer.py
+# Das Veroeffentlichungsskript selbst gehoert nicht ins Paket.
+push_nach_anlage.sh

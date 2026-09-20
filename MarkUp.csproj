@@ -24,7 +24,7 @@
          Dateieigenschaften an, und die Codesignatur fuehrt spaeter denselben
          Namen. Die Oberflaeche LIEST die Version aus der Assembly
          (AppInfo.VersionText), sie wird nicht mehr getippt.
-         Siehe FB-20260912-102451348-e535. -->
+         Siehe MUP-20260912-102451348-e535. -->
     <Company>Eselchen Labs</Company>
     <Product>MarkUp</Product>
     <!-- .NET nimmt AssemblyTitle als FileDescription, nicht Description. -->

@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Windows.Forms;
 
-// FB-20260912-102451348-e535: Die Version wird GELESEN, nicht getippt.
+// MUP-20260912-102451348-e535: Die Version wird GELESEN, nicht getippt.
 //
 // 🔴 Vorher stand "v1.0" als Zeichenkette im Startbild. Steigt die
 // csproj auf 1.1.0, zeigte die Oberflaeche weiter "v1.0" -- und
@@ -432,7 +432,7 @@ class ImageStampShape : Shape {
     }
 }
 
-// FB-20260328-170558899-8e36: Numbered circle annotation tool
+// MUP-20260328-170558899-8e36: Numbered circle annotation tool
 class NumberedCircleShape : Shape {
     public Rectangle Rect;
     public int Number = 1;
@@ -491,7 +491,7 @@ static class StampManager {
     static Dictionary<string,Bitmap> _cache = new Dictionary<string,Bitmap>();
     static bool _initialized = false;
 
-    // FB-20260912-101909129-ca2d: Hier standen zwei fremde Firmenlogos
+    // MUP-20260912-101909129-ca2d: Hier standen zwei fremde Firmenlogos
     // als Base64 (~39 KB). Sie nannten den Arbeitgeber, und `#if` nimmt
     // sie nur aus dem BUILD, nicht aus der DATEI.
     // Logos kommen jetzt aus stamps/ -- siehe LadeLogosAusOrdner.
@@ -514,7 +514,7 @@ static class StampManager {
         _cache["confidential"] = MakeTextStamp("CONFIDENTIAL", Color.FromArgb(140,40,160), Color.White);
         // Load logo PNGs from stamps/ directory next to the executable
         string stampDir = GetStampDir();
-        // FB-20260912-101909129-ca2d: Keine fest verdrahteten
+        // MUP-20260912-101909129-ca2d: Keine fest verdrahteten
         // Firmennamen mehr. Was in stamps/ als *_logo.png liegt,
         // wird angeboten -- der Name kommt aus dem Dateinamen.
         // Damit ist der Quelltext frei von fremden Marken UND die
@@ -522,7 +522,7 @@ static class StampManager {
         LadeLogosAusOrdner(stampDir);
     }
 
-    // FB-20260912-101909129-ca2d: Logos aus dem Ordner statt aus dem
+    // MUP-20260912-101909129-ca2d: Logos aus dem Ordner statt aus dem
     // Quelltext. Vorher standen zwei fremde Firmenlogos als Base64 in
     // Program.cs (~28 KB) und ihre Namen in zwei Arrays -- `#if` nimmt
     // sie aus dem BUILD, nicht aus der DATEI. Ein Leser des Repos haette
@@ -741,7 +741,7 @@ class DrawState {
     public float    Width     = 4f;
     public bool     PassThru  = true;  // MUP-234541: Markup mode OFF at startup
     public bool     ShowHelp  = false;
-    // FB-20260912-102455567-e140: Lage des Hilfe-Kastens.
+    // MUP-20260912-102455567-e140: Lage des Hilfe-Kastens.
     // null = mittig wie bisher -- wer nie zieht, merkt keinen
     // Unterschied. 🔴 Gehoert in den GETEILTEN Zustand: sonst
     // wandert die Hilfe auf einem Bildschirm und bleibt auf dem
@@ -768,7 +768,7 @@ class DrawState {
     public bool      EllipseFill  = false;
     public float     TextSize     = 20f;
     public float     HighlightAlpha = 64f; // MUP-133846: 25% opacity (64/255)
-    // FB-20260328-170558899-8e36: Numbered circle tool
+    // MUP-20260328-170558899-8e36: Numbered circle tool
     public int       NextNumCircle = 1;
     public bool      NumCircleFill = false;
 
@@ -1587,7 +1587,7 @@ class ScreenOverlay : Form {
                (sh is EllipseShape es && es.AnimatedRainbow) ||
                (sh is CensorShape cs && cs.AnimatedRainbow) ||
                (sh is TextShape ts && ts.AnimatedRainbow) || // MUP-e0d2
-               (sh is NumberedCircleShape nc && nc.AnimatedRainbow); // FB-20260328-170558899-8e36: animated rainbow for numbered circles
+               (sh is NumberedCircleShape nc && nc.AnimatedRainbow); // MUP-20260328-170558899-8e36: animated rainbow for numbered circles
     }
 
     // MUP-c55f v3: Rebuild static layer (non-animated shapes only)
@@ -1720,7 +1720,7 @@ class ScreenOverlay : Form {
     // MKP-133745: Public methods called from MarkUpApp via global mouse hook.
     // These receive overlay-local coordinates (already translated from screen coords).
     public void OnHookDown(Point loc) {
-        // FB-20260912-102455567-e140: Vorher schloss JEDER Klick die
+        // MUP-20260912-102455567-e140: Vorher schloss JEDER Klick die
         // Hilfe -- man konnte sie nicht anfassen, ohne sie zu schliessen.
         //
         // 🔴 Der Zweig endet in JEDEM Fall mit `return`: unter der offenen
@@ -1780,14 +1780,14 @@ class ScreenOverlay : Form {
             case DrawTool.Ellipse:   _live=new EllipseShape{Color=_st.Color,Width=_st.Width,Rect=new Rectangle(loc,Size.Empty),Rainbow=_st.IsRainbow,AnimatedRainbow=_st.IsAnimatedRainbow,Fill=_st.EllipseFill};break;
             case DrawTool.Highlight: _live=new RectShape   {Color=Color.FromArgb((int)_st.HighlightAlpha,_st.Color),Width=_st.Width,Rect=new Rectangle(loc,Size.Empty),Fill=true,Rainbow=_st.IsRainbow,AnimatedRainbow=_st.IsAnimatedRainbow};break;
             case DrawTool.Censor:    _live=new CensorShape {Color=_st.Color,Width=_st.Width,Rect=new Rectangle(loc,Size.Empty),Rainbow=_st.IsRainbow,AnimatedRainbow=_st.IsAnimatedRainbow,Method=_st.CensorMode,Intensity=_st.CensorLevel};break;
-            case DrawTool.NumberedCircle: { // FB-20260328-170558899-8e36: click-to-place, no drag
+            case DrawTool.NumberedCircle: { // MUP-20260328-170558899-8e36: click-to-place, no drag
                 int r=(int)(_st.Width*5f); if(r<6)r=6;
                 var ncs=new NumberedCircleShape{Color=_st.Color,Width=_st.Width,Rect=new Rectangle(loc.X-r,loc.Y-r,r*2,r*2),Number=_st.NextNumCircle++,Fill=_st.NumCircleFill,Rainbow=_st.IsRainbow,AnimatedRainbow=_st.IsAnimatedRainbow};
                 _shapes.Add(ncs); MarkDirty(loc,r+20); RedrawCommitted(); Render(); _down=false; return;
             }
         }
     }
-    // FB-20260912-102455567-e140: Zustand des Ziehens.
+    // MUP-20260912-102455567-e140: Zustand des Ziehens.
     bool _helpDrag = false;
     Size _helpGrab = Size.Empty;
 
@@ -1823,7 +1823,7 @@ class ScreenOverlay : Form {
             case DrawTool.Rect:case DrawTool.Highlight:  ((RectShape)_live).Rect=MR(_start,loc);break;
             case DrawTool.Ellipse:                       ((EllipseShape)_live).Rect=MR(_start,loc);break;
             case DrawTool.Censor:                        ((CensorShape)_live).Rect=MR(_start,loc);break;
-            // FB-20260328-170558899-8e36: NumberedCircle is click-to-place, no live update needed
+            // MUP-20260328-170558899-8e36: NumberedCircle is click-to-place, no live update needed
         }
     }
     public void OnHookUp(Point loc) {
@@ -1869,12 +1869,12 @@ class ScreenOverlay : Form {
     }
 
     // ── Help ──────────────────────────────────────────────────────────────────
-    // FB-20260912-102455567-e140: EINE Stelle rechnet die Lage.
+    // MUP-20260912-102455567-e140: EINE Stelle rechnet die Lage.
     // Zeichnen und Trefferpruefung muessen dieselbe benutzen, sonst
     // laufen sie auseinander und das Kreuz sitzt woanders, als es
     // aussieht.
     //
-    // FB-20260912-102451348-e535: HilfeH 420 -> 448. Der Schliess-Hinweis
+    // MUP-20260912-102451348-e535: HilfeH 420 -> 448. Der Schliess-Hinweis
     // sitzt bei ph-46, die Fusszeile bei ph-24; daneben war kein Platz.
     const int HilfeB = 500, HilfeH = 448, GriffH = 44, KreuzG = 28;
 
@@ -1923,7 +1923,7 @@ class ScreenOverlay : Form {
         int x=px+30,y=py+24;
         using(Font ft=new Font("Segoe UI",15f,FontStyle.Bold))
         using(SolidBrush w=new SolidBrush(Color.White)) g.DrawString("MarkUp  -  Hilfe",ft,w,x,y);
-        // FB-20260912-102455567-e140: Der eigene Weg zum
+        // MUP-20260912-102455567-e140: Der eigene Weg zum
         // Schliessen. Ohne ihn waere die Hilfe nach dem Wegfall
         // des pauschalen Klicks nur noch ueber die Taste zu
         // schliessen.
@@ -1945,7 +1945,7 @@ class ScreenOverlay : Form {
         using(Font sm=new Font("Segoe UI",9f))
         using(SolidBrush dim=new SolidBrush(Color.FromArgb(80,255,255,255)))
             g.DrawString(DrawState.FormatKey(_st.KHelp)+" oder Klick zum Schließen",sm,dim,px+pw-200,py+ph-46);
-        // FB-20260912-102451348-e535: Version, Herausgeber und
+        // MUP-20260912-102451348-e535: Version, Herausgeber und
         // die Twemoji-Nennung -- dauerhaft erreichbar ueber die
         // Hilfetaste, anders als der Startbildschirm.
         using(Pen trenn=new Pen(Color.FromArgb(40,255,255,255),1f))
@@ -2485,7 +2485,7 @@ class FloatingBar : Form {
             }
         }
         else if (tool == DrawTool.NumberedCircle) {
-            // FB-20260328-170558899-8e36: Numbered circle tool options
+            // MUP-20260328-170558899-8e36: Numbered circle tool options
             cm.Items.Add(new ToolStripLabel("F\u00FCllung"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
             AddRadio(cm, "Nur Rahmen",      !_st.NumCircleFill, ()=>{_st.NumCircleFill=false;});
             AddRadio(cm, "Halbtransparent",  _st.NumCircleFill,  ()=>{_st.NumCircleFill=true;});
