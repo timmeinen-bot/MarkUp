@@ -1,55 +1,55 @@
-# Fremdlizenzen — MarkUp
+# Third-party notices — MarkUp
 
 Copyright (C) 2026 Eselchen Labs
 
-## Emoji-Grafiken — Twemoji (CC BY 4.0)
+## Emoji graphics — Twemoji (CC BY 4.0)
 
-Die Stempel unter `stamps/emoji/` (23 PNG-Dateien, 72 × 72) stammen aus
-**Twemoji** und sind unter **CC BY 4.0** lizenziert.
+The stamps under `stamps/emoji/` (23 PNG files, 72 × 72) come from **Twemoji**
+and are licensed under **CC BY 4.0**.
 
-**Herkunft belegt** (nicht geraten): Am 06.09.2026 wurden die Dateien per
-SHA-256 gegen die offizielle Twemoji-Ausgabe abgeglichen. Mehrere Dateien sind
-**bit-identisch** mit Twemoji 14.0.2 (`assets/72x72/`), u. a.:
+**Provenance verified** (not assumed): on 2026-09-06 the files were compared by
+SHA-256 against the official Twemoji release. Several files are **bit-identical**
+to Twemoji 14.0.2 (`assets/72x72/`), among them:
 
-| Datei | Unicode | Ergebnis |
+| File | Unicode | Result |
 |---|---|---|
-| `fire.png` | U+1F525 | identisch mit twemoji 14.0.2 |
-| `rocket.png` | U+1F680 | identisch mit twemoji 14.0.2 |
-| `unicorn.png` | U+1F984 | identisch mit twemoji 14.0.2 |
-| `poop.png` | U+1F4A9 | identisch mit twemoji 14.0.2 |
-| `heart.png` | U+2764 | identisch mit twemoji 14.0.2 |
+| `fire.png` | U+1F525 | identical to twemoji 14.0.2 |
+| `rocket.png` | U+1F680 | identical to twemoji 14.0.2 |
+| `unicorn.png` | U+1F984 | identical to twemoji 14.0.2 |
+| `poop.png` | U+1F4A9 | identical to twemoji 14.0.2 |
+| `heart.png` | U+2764 | identical to twemoji 14.0.2 |
 
-Die Dateien tragen keine Metadaten mehr; sie wurden beim Übernehmen von den
-Unicode-Codepunkt-Namen auf sprechende Namen umbenannt (`donkey.png` statt
-`1f434.png`). Umbenennen ist keine Bearbeitung des Werks — der Bildinhalt ist
-unverändert (bit-identisch), es ist also nur die Namensnennung erforderlich.
+The files no longer carry any metadata; when they were adopted they were renamed
+from their Unicode code point names to readable ones (`donkey.png` instead of
+`1f434.png`). Renaming is not an adaptation of the work — the image content is
+unchanged (bit-identical), so attribution alone is required.
 
-**Twemoji** ist CC BY 4.0. Für die Auslieferung genügt die Namensnennung
-(Name, Urheber, Lizenz, Verweis auf den Lizenztext). Es besteht **keine**
-ShareAlike-Pflicht (anders als bei OpenMoji), und MarkUp selbst wird durch die
-Verwendung nicht CC-lizenziert.
+**Twemoji** is CC BY 4.0. For distribution, attribution is sufficient (name,
+author, license, link to the license text). There is **no** ShareAlike
+obligation (unlike OpenMoji), and using it does not place MarkUp itself under a
+CC license.
 
-Mitgelieferter und in der Oberfläche erreichbarer Hinweis:
+The notice shipped with the program and reachable from its user interface:
 
-    Emoji-Grafiken: Twemoji
-    Copyright 2020 Twitter, Inc und weitere Mitwirkende
-    (fortgeführt von der Twemoji-Community, github.com/jdecked/twemoji)
-    Lizenz: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+    Emoji graphics: Twemoji
+    Copyright 2020 Twitter, Inc and other contributors
+    (continued by the Twemoji community, github.com/jdecked/twemoji)
+    License: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
 
-Nicht verwendet werden die Emoji der Windows-Schriftart Segoe UI Emoji: sie
-gehören Microsoft und dürfen nicht als Bilddateien weitergegeben werden.
+The emoji from the Windows font Segoe UI Emoji are deliberately not used: they
+belong to Microsoft and may not be redistributed as image files.
 
-## Firmenlogos — NICHT in der Veröffentlichung
+## Company logos — NOT part of the release
 
-`stamps/peakon_logo.png` und `stamps/workday_logo.png` sind fremde Firmenmarken
-(Peakon/Workday). Sie werden **nicht** ausgeliefert: der öffentliche Build
-(`-p:PublicBuild=true`, Konstante `PUBLIC_BUILD`) entfernt sie aus `Program.cs`,
-und der Installer nimmt nur `stamps/emoji/` auf, nie `stamps/*.png`. Sie bleiben
-allein der privaten Fassung vorbehalten.
+`stamps/peakon_logo.png` and `stamps/workday_logo.png` are third-party company
+marks (Peakon/Workday). They are **not** shipped: the public build
+(`-p:PublicBuild=true`, constant `PUBLIC_BUILD`) strips them from `Program.cs`,
+and the installer only picks up `stamps/emoji/`, never `stamps/*.png`. They
+remain exclusive to the private edition.
 
-## Laufzeitumgebung — .NET 8 (MIT)
+## Runtime — .NET 8 (MIT)
 
-MarkUp ist **self-contained** gegen **.NET 8 (Windows Desktop)** gebaut: die
-Laufzeitumgebung (MIT-Lizenz) ist in die EXE eingebettet, es muss nichts
-gesondert installiert werden. Weitere Fremdbestandteile gibt es nicht —
-`MarkUp.csproj` führt kein einziges `PackageReference`.
+MarkUp is built **self-contained** against **.NET 8 (Windows Desktop)**: the
+runtime (MIT license) is embedded in the EXE, so nothing has to be installed
+separately. There are no other third-party components — `MarkUp.csproj` does not
+contain a single `PackageReference`.

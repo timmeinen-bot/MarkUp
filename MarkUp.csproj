@@ -7,11 +7,11 @@
     <Nullable>disable</Nullable>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <!-- FB-2fa9 (Veroeffentlichung): self-contained - .NET-8-Runtime ist eingebettet,
-         Nutzer brauchen NICHTS zu installieren. Single-File + Kompression haelt die
-         EXE bei ~35 MB statt ~75 MB. (Vorher framework-dependent/MUP-6c1c ~5MB, aber
-         das setzt eine installierte Runtime voraus - fuer die oeffentliche Verteilung
-         untauglich.) -->
+    <!-- FB-2fa9 (release): self-contained - the .NET 8 runtime is embedded,
+         users need to install NOTHING. Single-file + compression keeps the
+         EXE at ~35 MB instead of ~75 MB. (Previously framework-dependent,
+         MUP-6c1c, ~5 MB - but that assumes an installed runtime, which is
+         unusable for public distribution.) -->
     <SelfContained>true</SelfContained>
     <PublishSingleFile>true</PublishSingleFile>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
@@ -20,29 +20,29 @@
     <PublishReadyToRun>true</PublishReadyToRun>
     <!-- MUP-234654: Embed app icon in EXE for Explorer/shortcuts -->
     <ApplicationIcon>app.ico</ApplicationIcon>
-    <!-- PUB-2026-19: Herausgeber und Urheberrecht. Windows zeigt das in den
-         Dateieigenschaften an, und die Codesignatur fuehrt spaeter denselben
-         Namen. Die Oberflaeche LIEST die Version aus der Assembly
-         (AppInfo.VersionText), sie wird nicht mehr getippt.
-         Siehe MUP-20260912-102451348-e535. -->
+    <!-- PUB-2026-19: publisher and copyright. Windows shows these in the file
+         properties, and the code signature will later carry the same name.
+         The user interface READS the version from the assembly
+         (AppInfo.VersionText); it is no longer typed by hand.
+         See MUP-20260912-102451348-e535. -->
     <Company>Eselchen Labs</Company>
     <Product>MarkUp</Product>
-    <!-- .NET nimmt AssemblyTitle als FileDescription, nicht Description. -->
-    <AssemblyTitle>MarkUp - Bildschirm-Annotation</AssemblyTitle>
+    <!-- .NET uses AssemblyTitle as FileDescription, not Description. -->
+    <AssemblyTitle>MarkUp - screen annotation</AssemblyTitle>
     <Authors>Eselchen Labs</Authors>
     <Copyright>Copyright (C) 2026 Eselchen Labs</Copyright>
-    <Description>MarkUp - transparentes Bildschirm-Annotationswerkzeug fuer Windows</Description>
+    <Description>MarkUp - transparent screen annotation tool for Windows</Description>
     <Version>1.0.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
 </PropertyGroup>
   <ItemGroup>
-    <!-- MUP-234715 v7: EmbeddedResource entfernt. -->
-    <!-- MFL-20260914-100935122-7b23: der alte Satz sagte, die Logos
-         staenden als base64 im Quelltext. Seit der Bereinigung stimmt
-         das nicht mehr - LadeLogosAusOrdner(stampDir) liest sie zur
-         Laufzeit aus stamps/. Wer den veroeffentlichten Code liest,
-         suchte sonst nach etwas, das es nicht gibt. -->
+    <!-- MUP-234715 v7: EmbeddedResource removed. -->
+    <!-- MFL-20260914-100935122-7b23: the old note claimed the logos were
+         embedded in the source as base64. Since the cleanup that is no longer
+         true - LadeLogosAusOrdner(stampDir) reads them from stamps/ at
+         runtime. Anyone reading the published code would otherwise look for
+         something that does not exist. -->
     <!-- Content copy kept for development/debug runs (emoji PNGs still loaded from filesystem) -->
     <Content Include="stamps\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

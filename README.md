@@ -1,54 +1,53 @@
 # MarkUp
 
-Ein transparentes Annotationswerkzeug für den Windows-Bildschirm. MarkUp legt
-sich über alles, was gerade zu sehen ist - Präsentation, Tabelle, Video - und
-lässt darauf zeichnen, ohne die darunterliegende Anwendung zu berühren.
+A transparent annotation tool for the Windows desktop. MarkUp sits on top of
+whatever is currently on screen — a presentation, a spreadsheet, a video — and
+lets you draw over it without touching the application underneath.
 
-![Lizenz](https://img.shields.io/badge/Lizenz-MIT-blue)
+![License](https://img.shields.io/badge/License-MIT-blue)
 ![.NET](https://img.shields.io/badge/.NET-8.0-512BD4)
-![Plattform](https://img.shields.io/badge/Plattform-Windows-0078D4)
+![Platform](https://img.shields.io/badge/Platform-Windows-0078D4)
 
-## Was es kann
+## What it does
 
-| Werkzeug | Beschreibung |
+| Tool | Description |
 |---|---|
-| Freihand | zeichnen mit der Maus |
-| Pfeil, Rechteck, Ellipse | die üblichen Formen |
-| Text | Beschriftung, Enter beendet die Eingabe |
-| Highlighter | halbtransparent, zum Hervorheben |
-| Zensur | deckt ab, was nicht auf den Bildschirm soll |
-| Stempel | Symbole und Textstempel (Approved, Rejected, Draft, Confidential) |
-| Nummerierung | fortlaufende Ziffernkreise für Schrittanleitungen |
+| Freehand | draw with the mouse |
+| Arrow, rectangle, ellipse | the usual shapes |
+| Text | captions; Enter finishes the entry |
+| Highlighter | semi-transparent, for emphasis |
+| Redaction | covers up anything that should not be on screen |
+| Stamps | symbols and text stamps (Approved, Rejected, Draft, Confidential) |
+| Numbering | consecutive numbered circles for step-by-step instructions |
 
-Dazu: **Markup ein/aus** lässt Klicks wieder zur darunterliegenden Anwendung
-durch, ohne das Gezeichnete zu verlieren. Auf mehreren Bildschirmen ist die
-Werkzeugleiste überall gleichzeitig aktiv - gezeichnet wird dort, wo der Zeiger
-ist.
+On top of that: **markup on/off** lets clicks through to the application
+underneath again without losing what you have drawn. Across several monitors
+the toolbar is active on all of them at once — you draw wherever the pointer
+is.
 
-Alle Tasten sind frei belegbar; die Hilfe (Standard: `F1`) zeigt die aktuelle
-Belegung.
+Every key is freely assignable; the help screen (default: `F1`) shows the
+current bindings.
 
-## Bauen
+## Building
 
 ```
 dotnet build -c Release
 ```
 
-Ergebnis: `bin/Release/net8.0-windows/win-x64/MarkUp.dll` bzw. die EXE.
-Voraussetzung ist das .NET-8-SDK für Windows. MarkUp hat **keine**
-NuGet-Abhängigkeiten.
+Result: `bin/Release/net8.0-windows/win-x64/MarkUp.dll` and the matching EXE.
+You need the .NET 8 SDK for Windows. MarkUp has **no** NuGet dependencies.
 
-## Eigene Stempel
+## Custom stamps
 
-Jede Datei `stamps/<name>_logo.png` wird beim Start als zusätzlicher Stempel
-angeboten. Der Name in der Auswahl ergibt sich aus dem Dateinamen.
+Every file named `stamps/<name>_logo.png` is offered as an additional stamp at
+startup. The name shown in the picker is derived from the file name.
 
-## Lizenz
+## License
 
-MIT - siehe [LICENSE](LICENSE).
+MIT — see [LICENSE](LICENSE).
 
-Die mitgelieferten Emoji-Grafiken stammen aus **Twemoji** und stehen unter
-**CC BY 4.0**. Einzelheiten und die vollständige Namensnennung:
+The bundled emoji graphics come from **Twemoji** and are licensed under
+**CC BY 4.0**. Details and the full attribution are in
 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
 ---

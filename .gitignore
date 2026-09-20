@@ -6,12 +6,12 @@ obj/
 .claude/
 screenshot_qa.png
 
-# FB-20260912-101909129-ca2d: Der Quellbaum geht oeffentlich.
-# Fremde Firmenlogos bleiben auf der Platte nutzbar, aber nicht in git.
+# FB-20260912-101909129-ca2d: the source tree is public.
+# Third-party company logos stay usable on disk, but not in git.
 stamps/*_logo.png
-# Arbeitsnotizen fuer Claude gehoeren nicht in ein oeffentliches Repo.
+# Working notes for Claude do not belong in a public repository.
 CLAUDE.md
-# Sicherungen und Bauwerkzeuge
+# Backups and build tooling
 *.bak
 *.bak.*
 *.bak_*
@@ -19,5 +19,5 @@ CLAUDE.md
 __pycache__/
 installer/
 build_installer.py
-# Das Veroeffentlichungsskript selbst gehoert nicht ins Paket.
+# The publishing script itself is not part of the package.
 push_nach_anlage.sh
