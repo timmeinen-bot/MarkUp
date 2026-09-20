@@ -50,7 +50,7 @@ class Program {
             MarkUpApp app = new MarkUpApp();
             app.Run();
         } catch (Exception ex) {
-            MessageBox.Show(ex.ToString(), "MarkUp Fehler");
+            MessageBox.Show(ex.ToString(), "MarkUp error");
         }
     }
 }
@@ -1201,8 +1201,8 @@ class MarkUpApp {
         cm.Renderer=new ToolStripProfessionalRenderer(new DarkColorTable());
         // FB-a295: Use FormatKey() for shortcut display (ShowShortcutKeys uses Keys.ToString() which shows "Oem7" instead of "Ä")
         var miShow = new ToolStripMenuItem("&Anzeigen\t" + DrawState.FormatKey(_state.KShow), null, (s,e) => Restore()) { ShowShortcutKeys=false };
-        var miClear = new ToolStripMenuItem("Alles &löschen\t" + DrawState.FormatKey(_state.KClear), null, (s,e) => ClearAll()) { ShowShortcutKeys=false };
-        var miQuit = new ToolStripMenuItem("&Beenden\t" + DrawState.FormatKey(_state.KQuit), null, (s,e) => Application.Exit()) { ShowShortcutKeys=false };
+        var miClear = new ToolStripMenuItem("Clear &all\t" + DrawState.FormatKey(_state.KClear), null, (s,e) => ClearAll()) { ShowShortcutKeys=false };
+        var miQuit = new ToolStripMenuItem("&Quit\t" + DrawState.FormatKey(_state.KQuit), null, (s,e) => Application.Exit()) { ShowShortcutKeys=false };
         miShow.ForeColor=Color.White; miShow.BackColor=Color.FromArgb(30,30,46);
         miClear.ForeColor=Color.White; miClear.BackColor=Color.FromArgb(30,30,46);
         miQuit.ForeColor=Color.White; miQuit.BackColor=Color.FromArgb(30,30,46);
@@ -1335,8 +1335,8 @@ class MarkUpApp {
         cm.BackColor=Color.FromArgb(30,30,46); cm.ForeColor=Color.White;
         cm.Renderer=new ToolStripProfessionalRenderer(new DarkColorTable());
         var miShow = new ToolStripMenuItem("&Anzeigen\t" + DrawState.FormatKey(_state.KShow), null, (s,e) => Restore()) { ShowShortcutKeys=false };
-        var miClear = new ToolStripMenuItem("Alles &löschen\t" + DrawState.FormatKey(_state.KClear), null, (s,e) => ClearAll()) { ShowShortcutKeys=false };
-        var miQuit = new ToolStripMenuItem("&Beenden\t" + DrawState.FormatKey(_state.KQuit), null, (s,e) => Application.Exit()) { ShowShortcutKeys=false };
+        var miClear = new ToolStripMenuItem("Clear &all\t" + DrawState.FormatKey(_state.KClear), null, (s,e) => ClearAll()) { ShowShortcutKeys=false };
+        var miQuit = new ToolStripMenuItem("&Quit\t" + DrawState.FormatKey(_state.KQuit), null, (s,e) => Application.Exit()) { ShowShortcutKeys=false };
         miShow.ForeColor=Color.White; miShow.BackColor=Color.FromArgb(30,30,46);
         miClear.ForeColor=Color.White; miClear.BackColor=Color.FromArgb(30,30,46);
         miQuit.ForeColor=Color.White; miQuit.BackColor=Color.FromArgb(30,30,46);
@@ -1355,9 +1355,9 @@ class MarkUpApp {
             link.SetIconLocation(exePath, 0);
             ((System.Runtime.InteropServices.ComTypes.IPersistFile)link).Save(lnkPath, false);
             Marshal.ReleaseComObject(link);
-            MessageBox.Show("Verknüpfung erstellt:\n" + lnkPath, "MarkUp", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Shortcut created:\n" + lnkPath, "MarkUp", MessageBoxButtons.OK, MessageBoxIcon.Information);
         } catch (Exception ex) {
-            MessageBox.Show("Fehler: " + ex.Message, "MarkUp", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("Error: " + ex.Message, "MarkUp", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -1377,12 +1377,12 @@ class MarkUpApp {
             string lnkPath = Path.Combine(startupDir, "MarkUp.lnk");
             if (File.Exists(lnkPath)) {
                 File.Delete(lnkPath);
-                MessageBox.Show("Autostart entfernt.", "MarkUp", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Removed from startup.", "MarkUp", MessageBoxButtons.OK, MessageBoxIcon.Information);
             } else {
                 CreateShortcut(lnkPath);
             }
         } catch (Exception ex) {
-            MessageBox.Show("Fehler: " + ex.Message, "MarkUp", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("Error: " + ex.Message, "MarkUp", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -1919,7 +1919,7 @@ class ScreenOverlay : Form {
 
         int x=px+30,y=py+24;
         using(Font ft=new Font("Segoe UI",15f,FontStyle.Bold))
-        using(SolidBrush w=new SolidBrush(Color.White)) g.DrawString("MarkUp  -  Hilfe",ft,w,x,y);
+        using(SolidBrush w=new SolidBrush(Color.White)) g.DrawString("MarkUp  -  Help",ft,w,x,y);
         // MUP-20260912-102455567-e140: a dedicated way to close. Without
         // it, once the catch-all click was removed, the help box could only
         // be closed with the keyboard.
@@ -1933,14 +1933,14 @@ class ScreenOverlay : Form {
         }
         y+=40;
 
-        string[][] left={ new[]{"WERKZEUGE",""}, new[]{DrawState.FormatKey(_st.KPen),"Freihand"}, new[]{DrawState.FormatKey(_st.KArrow),"Pfeil"}, new[]{DrawState.FormatKey(_st.KRect),"Rechteck"}, new[]{DrawState.FormatKey(_st.KEll),"Ellipse"}, new[]{DrawState.FormatKey(_st.KText),"Text (Enter=fertig)"}, new[]{DrawState.FormatKey(_st.KHl),"Highlighter"}, new[]{DrawState.FormatKey(_st.KCen),"Zensur"}, new[]{DrawState.FormatKey(_st.KStamp),"Stempel (Rechtsklick=Auswahl)"}, new[]{DrawState.FormatKey(_st.KNumCircle),"Nummerierung"} };
-        // FB-a295: "Klick-Durchlass" renamed to "Markup ein/aus", Undo uses FormatKey
-        string[][] right={ new[]{"AKTIONEN",""}, new[]{"Ctrl+"+DrawState.FormatKey(_st.KUndo),"Rückgängig"}, new[]{DrawState.FormatKey(_st.KClear),"Alles löschen"}, new[]{DrawState.FormatKey(_st.KPass),"Markup ein/aus"}, new[]{DrawState.FormatKey(_st.KTray),"In Tray"}, new[]{DrawState.FormatKey(_st.KHelp),"Diese Hilfe"}, new[]{DrawState.FormatKey(_st.KQuit),"Beenden"}, new[]{"",""},new[]{"MEHRERE MONITORE",""},new[]{"Toolbar","Auf allen Screens gleichzeitig aktiv"},new[]{"","Einfach auf dem gewünschten"},new[]{"","Screen zeichnen"} };
+        string[][] left={ new[]{"TOOLS",""}, new[]{DrawState.FormatKey(_st.KPen),"Freehand"}, new[]{DrawState.FormatKey(_st.KArrow),"Arrow"}, new[]{DrawState.FormatKey(_st.KRect),"Rectangle"}, new[]{DrawState.FormatKey(_st.KEll),"Ellipse"}, new[]{DrawState.FormatKey(_st.KText),"Text (Enter = done)"}, new[]{DrawState.FormatKey(_st.KHl),"Highlighter"}, new[]{DrawState.FormatKey(_st.KCen),"Redaction"}, new[]{DrawState.FormatKey(_st.KStamp),"Stamp (right-click = picker)"}, new[]{DrawState.FormatKey(_st.KNumCircle),"Numbering"} };
+        // FB-a295: "Klick-Durchlass" renamed to "Markup on/off", Undo uses FormatKey
+        string[][] right={ new[]{"ACTIONS",""}, new[]{"Ctrl+"+DrawState.FormatKey(_st.KUndo),"Undo"}, new[]{DrawState.FormatKey(_st.KClear),"Clear all"}, new[]{DrawState.FormatKey(_st.KPass),"Markup on/off"}, new[]{DrawState.FormatKey(_st.KTray),"To tray"}, new[]{DrawState.FormatKey(_st.KHelp),"This help"}, new[]{DrawState.FormatKey(_st.KQuit),"Quit"}, new[]{"",""},new[]{"MULTIPLE MONITORS",""},new[]{"Toolbar","Active on all screens at once"},new[]{"","Just draw on whichever"},new[]{"","screen you want"} };
         DrawCol(g,left, x,         y, 220);
         DrawCol(g,right,x+pw/2-10, y, 260);
         using(Font sm=new Font("Segoe UI",9f))
         using(SolidBrush dim=new SolidBrush(Color.FromArgb(80,255,255,255)))
-            g.DrawString(DrawState.FormatKey(_st.KHelp)+" oder Klick zum Schließen",sm,dim,px+pw-200,py+ph-46);
+            g.DrawString(DrawState.FormatKey(_st.KHelp)+" or click to close",sm,dim,px+pw-200,py+ph-46);
         // MUP-20260912-102451348-e535: version, publisher and the Twemoji
         // attribution -- permanently reachable via the help key, unlike the
         // splash screen.
@@ -2003,7 +2003,7 @@ class HotkeyDialog : Form {
     Label _warn;
 
     public HotkeyDialog(DrawState st) {
-        _st=st; Text="Tastenkürzel"; FormBorderStyle=FormBorderStyle.FixedDialog;
+        _st=st; Text="Shortcuts"; FormBorderStyle=FormBorderStyle.FixedDialog;
         MaximizeBox=MinimizeBox=false; StartPosition=FormStartPosition.CenterScreen;
         BackColor=Color.FromArgb(22,22,36); ForeColor=Color.White; ClientSize=new Size(340,720); TopMost=true;
         Font=new Font("Segoe UI",10f); Build();
@@ -2042,31 +2042,31 @@ class HotkeyDialog : Form {
     }
 
     void Build(){
-        Label hdr=new Label{Text="Tastenkürzel anpassen",Font=new Font("Segoe UI",12f,FontStyle.Bold),ForeColor=Color.White,Dock=DockStyle.Top,Height=34,Padding=new Padding(14,6,0,0)};
-        Label hint=new Label{Text="Feld anklicken, dann beliebige Taste drücken",Font=new Font("Segoe UI",8.5f),ForeColor=Color.FromArgb(130,130,170),Dock=DockStyle.Top,Height=20,Padding=new Padding(14,0,0,0)};
+        Label hdr=new Label{Text="Customise shortcuts",Font=new Font("Segoe UI",12f,FontStyle.Bold),ForeColor=Color.White,Dock=DockStyle.Top,Height=34,Padding=new Padding(14,6,0,0)};
+        Label hint=new Label{Text="Click a field, then press any key",Font=new Font("Segoe UI",8.5f),ForeColor=Color.FromArgb(130,130,170),Dock=DockStyle.Top,Height=20,Padding=new Padding(14,0,0,0)};
         TableLayoutPanel tbl=new TableLayoutPanel{ColumnCount=2,Dock=DockStyle.Fill,Padding=new Padding(14,4,14,4),BackColor=Color.Transparent};
         tbl.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,42));tbl.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,58));
         // FB-a295: 19 rows = 9 tools + separator + 7 actions + warning + hint
         for(int i=0;i<19;i++)tbl.RowStyles.Add(new RowStyle(SizeType.Absolute,32));
-        _cPen =MRow(tbl,0,"Freihand",  _st.KPen);  _cArr =MRow(tbl,1,"Pfeil",    _st.KArrow);
-        _cRct =MRow(tbl,2,"Rechteck",  _st.KRect);  _cEll =MRow(tbl,3,"Kreis",    _st.KEll);
+        _cPen =MRow(tbl,0,"Freehand",  _st.KPen);  _cArr =MRow(tbl,1,"Arrow",    _st.KArrow);
+        _cRct =MRow(tbl,2,"Rectangle",  _st.KRect);  _cEll =MRow(tbl,3,"Circle",    _st.KEll);
         _cTxt =MRow(tbl,4,"Text",      _st.KText);  _cHl  =MRow(tbl,5,"Markieren",_st.KHl);
-        _cCen =MRow(tbl,6,"Zensur",    _st.KCen);   _cStamp=MRow(tbl,7,"Stempel", _st.KStamp);
-        _cNumCircle=MRow(tbl,8,"Nummerierung",_st.KNumCircle);
-        tbl.Controls.Add(new Label{Text="\u2500\u2500 Aktionen \u2500\u2500",ForeColor=Color.FromArgb(100,100,140),TextAlign=ContentAlignment.MiddleLeft,Dock=DockStyle.Fill},0,9);
+        _cCen =MRow(tbl,6,"Redaction",    _st.KCen);   _cStamp=MRow(tbl,7,"Stamp", _st.KStamp);
+        _cNumCircle=MRow(tbl,8,"Numbering",_st.KNumCircle);
+        tbl.Controls.Add(new Label{Text="\u2500\u2500 Actions \u2500\u2500",ForeColor=Color.FromArgb(100,100,140),TextAlign=ContentAlignment.MiddleLeft,Dock=DockStyle.Fill},0,9);
         tbl.Controls.Add(new Label{Dock=DockStyle.Fill},1,9);
         // FB-a295: "Durchlass" renamed to "Markup" (toggle markup mode)
-        _cTray=MRow(tbl,10,"Tray",      _st.KTray);  _cPass=MRow(tbl,11,"Markup",_st.KPass); _cHelp=MRow(tbl,12,"Hilfe",_st.KHelp);
+        _cTray=MRow(tbl,10,"Tray",      _st.KTray);  _cPass=MRow(tbl,11,"Markup",_st.KPass); _cHelp=MRow(tbl,12,"Help",_st.KHelp);
         // FB-a295: 4 new configurable action shortcuts
-        _cUndo=MRow(tbl,13,"Rückgängig", _st.KUndo);  _cClear=MRow(tbl,14,"Alles löschen",_st.KClear);
-        _cShow=MRow(tbl,15,"Anzeigen",   _st.KShow);  _cQuit=MRow(tbl,16,"Beenden",_st.KQuit);
-        _warn=new Label{Text="\u26A0 Doppelte Taste erkannt!",ForeColor=Color.FromArgb(255,100,100),Font=new Font("Segoe UI",8.5f,FontStyle.Bold),Dock=DockStyle.Fill,TextAlign=ContentAlignment.MiddleLeft,Visible=false};
+        _cUndo=MRow(tbl,13,"Undo", _st.KUndo);  _cClear=MRow(tbl,14,"Clear all",_st.KClear);
+        _cShow=MRow(tbl,15,"Anzeigen",   _st.KShow);  _cQuit=MRow(tbl,16,"Quit",_st.KQuit);
+        _warn=new Label{Text="\u26A0 Duplicate key detected!",ForeColor=Color.FromArgb(255,100,100),Font=new Font("Segoe UI",8.5f,FontStyle.Bold),Dock=DockStyle.Fill,TextAlign=ContentAlignment.MiddleLeft,Visible=false};
         tbl.Controls.Add(_warn,0,17); tbl.SetColumnSpan(_warn,2);
-        tbl.Controls.Add(new Label{Text="Feld anklicken + Taste drücken",ForeColor=Color.FromArgb(90,90,120),Font=new Font("Consolas",8f),Dock=DockStyle.Fill,TextAlign=ContentAlignment.MiddleLeft},0,18);
+        tbl.Controls.Add(new Label{Text="Click a field, then press a key",ForeColor=Color.FromArgb(90,90,120),Font=new Font("Consolas",8f),Dock=DockStyle.Fill,TextAlign=ContentAlignment.MiddleLeft},0,18);
         tbl.SetColumnSpan(tbl.GetControlFromPosition(0,18),2);
         Panel bp=new Panel{Dock=DockStyle.Bottom,Height=46,BackColor=Color.FromArgb(18,18,30),Padding=new Padding(10,7,10,7)};
-        Button ok=new Button{Text="Übernehmen",Width=120,Height=28,FlatStyle=FlatStyle.Flat,BackColor=Color.FromArgb(40,110,55),ForeColor=Color.White,Dock=DockStyle.Right};
-        Button can=new Button{Text="Abbrechen",Width=100,Height=28,FlatStyle=FlatStyle.Flat,BackColor=Color.FromArgb(60,35,35),ForeColor=Color.White,Dock=DockStyle.Right};
+        Button ok=new Button{Text="Apply",Width=120,Height=28,FlatStyle=FlatStyle.Flat,BackColor=Color.FromArgb(40,110,55),ForeColor=Color.White,Dock=DockStyle.Right};
+        Button can=new Button{Text="Cancel",Width=100,Height=28,FlatStyle=FlatStyle.Flat,BackColor=Color.FromArgb(60,35,35),ForeColor=Color.White,Dock=DockStyle.Right};
         // FB-3792: Reset to defaults button
         Button rst=new Button{Text="Standard",Width=90,Height=28,FlatStyle=FlatStyle.Flat,BackColor=Color.FromArgb(50,50,70),ForeColor=Color.FromArgb(180,180,210),Dock=DockStyle.Left};
         rst.FlatAppearance.BorderSize=0;
@@ -2116,7 +2116,7 @@ class FloatingBar : Form {
     static readonly Color[]    COLS   = { Color.FromArgb(255,60,60),Color.FromArgb(255,140,0),Color.FromArgb(240,200,0),Color.FromArgb(30,200,90),Color.FromArgb(40,150,255),Color.FromArgb(255,255,255) };
     static readonly string[]   ICONS  = { "\u270F","\u2197","\u25AD","\u25EF","T","\u25AC","\u2591","\uD83D\uDCCE","\u2460" };
     static readonly DrawTool[] TOOLS  = { DrawTool.Pen,DrawTool.Arrow,DrawTool.Rect,DrawTool.Ellipse,DrawTool.Text,DrawTool.Highlight,DrawTool.Censor,DrawTool.Stamp,DrawTool.NumberedCircle };
-    static readonly string[]   TNAMES = { "Freihand","Pfeil","Rechteck","Kreis","Text","Markieren","Zensur","Stempel","Nummerierung" };
+    static readonly string[]   TNAMES = { "Freehand","Arrow","Rectangle","Circle","Text","Highlight","Redaction","Stamp","Numbering" };
 
     public FloatingBar(DrawState st, List<ScreenOverlay> overlays, MarkUpApp app) {
         _st=st; _overlays=overlays; _app=app;
@@ -2217,32 +2217,32 @@ class FloatingBar : Form {
         UpdatePassBtn(); // MUP-234921: Sync button state at startup
         fl.Controls.Add(_passBtn);
 
-        _undoBtn=TB("↩","Rückgängig (Ctrl+"+DrawState.FormatKey(_st.KUndo)+")");
+        _undoBtn=TB("↩","Undo (Ctrl+"+DrawState.FormatKey(_st.KUndo)+")");
         _undoBtn.Click+=delegate{_app.UndoAll();};
         fl.Controls.Add(_undoBtn);
 
         fl.Controls.Add(Div());
-        Button hkb=TB("⌨","Tastenkürzel anpassen");
+        Button hkb=TB("⌨","Customise shortcuts");
         // FB-7962: Disable mouse hook while HotkeyDialog is open (clicks outside ToolbarRect would be swallowed)
         // MUP-a295: After dialog closes, refresh tooltips + tray menu to show updated shortcuts
         hkb.Click+=delegate{_dialogOpen=true;bool wasActive=MouseHookManager.Active;MouseHookManager.Active=false;try{new HotkeyDialog(_st).ShowDialog();}finally{_dialogOpen=false;MouseHookManager.Active=wasActive;RefreshTooltips();_app.RebuildTrayMenu();}};
         fl.Controls.Add(hkb);
 
-        _helpBtn=TB("?","Hilfe ("+DrawState.FormatKey(_st.KHelp)+")");
+        _helpBtn=TB("?","Help ("+DrawState.FormatKey(_st.KHelp)+")");
         _helpBtn.Click+=delegate{_st.ShowHelp=!_st.ShowHelp;_st.Fire();};
         fl.Controls.Add(_helpBtn);
 
         // MUP-13df: Pin button - left-click=Desktop shortcut, right-click=more options
-        Button pinBtn=TB("📌","Verknüpfung erstellen (Rechtsklick=Optionen)");
+        Button pinBtn=TB("📌","Create shortcut (right-click = options)");
         pinBtn.Click+=delegate{_app.CreateDesktopShortcut();};
         pinBtn.MouseUp+=delegate(object sx,MouseEventArgs ex){
             if(ex.Button!=MouseButtons.Right) return;
             ContextMenuStrip pcm=new ContextMenuStrip();
             pcm.BackColor=Color.FromArgb(30,30,46);pcm.ForeColor=Color.White;pcm.Renderer=new ToolStripProfessionalRenderer(new DarkColorTable());
-            pcm.Items.Add("Desktop-Verknüpfung",null,(s2,e2)=>{_app.CreateDesktopShortcut();});
-            pcm.Items.Add("Startmenü-Verknüpfung",null,(s2,e2)=>{_app.CreateStartMenuShortcut();});
+            pcm.Items.Add("Desktop shortcut",null,(s2,e2)=>{_app.CreateDesktopShortcut();});
+            pcm.Items.Add("Start menu shortcut",null,(s2,e2)=>{_app.CreateStartMenuShortcut();});
             pcm.Items.Add(new ToolStripSeparator());
-            ToolStripMenuItem autoItem=new ToolStripMenuItem(_app.IsAutostart()?"✓ Autostart entfernen":"Autostart (bei Anmeldung)");
+            ToolStripMenuItem autoItem=new ToolStripMenuItem(_app.IsAutostart()?"✓ Remove from startup":"Run at logon");
             autoItem.Click+=delegate{_app.ToggleAutostart();};
             pcm.Items.Add(autoItem);
             MouseHookManager.Active=false;
@@ -2259,13 +2259,13 @@ class FloatingBar : Form {
         fl.Controls.Add(_trayBtn);
 
         // FB-a295: Consistent tooltip format using FormatKey()
-        _clearBtn=TB("🗑","Alles löschen ("+DrawState.FormatKey(_st.KClear)+")");
+        _clearBtn=TB("🗑","Clear all ("+DrawState.FormatKey(_st.KClear)+")");
         _clearBtn.ForeColor=Color.FromArgb(210,70,70);
         _clearBtn.Click+=delegate{_app.ClearAll();};
         fl.Controls.Add(_clearBtn);
 
         // FB-a295: Consistent tooltip format using FormatKey()
-        _quitBtn=TB("✕","Beenden ("+DrawState.FormatKey(_st.KQuit)+")");
+        _quitBtn=TB("✕","Quit ("+DrawState.FormatKey(_st.KQuit)+")");
         _quitBtn.ForeColor=Color.FromArgb(210,70,70);
         _quitBtn.Click+=delegate{Application.Exit();};
         fl.Controls.Add(_quitBtn);
@@ -2335,8 +2335,8 @@ class FloatingBar : Form {
         _passBtn.ForeColor = Color.White;
         // FB-a295: Consistent tooltip format
         _tt.SetToolTip(_passBtn, _st.PassThru
-            ? "Markup INAKTIV - klicken um Markup zu aktivieren ("+DrawState.FormatKey(_st.KPass)+")"
-            : "Markup AKTIV - klicken um Markup zu deaktivieren ("+DrawState.FormatKey(_st.KPass)+")");
+            ? "Markup OFF - click to turn markup on ("+DrawState.FormatKey(_st.KPass)+")"
+            : "Markup ON - click to turn markup off ("+DrawState.FormatKey(_st.KPass)+")");
     }
 
     // MUP-a295: Refresh all toolbar tooltips after shortcut changes in HotkeyDialog
@@ -2349,11 +2349,11 @@ class FloatingBar : Form {
         }
         // Action buttons - update shortcut labels
         UpdatePassBtn(); // passBtn tooltip is updated inside UpdatePassBtn
-        if (_undoBtn != null)  _tt.SetToolTip(_undoBtn,  "Rückgängig (Ctrl+"+DrawState.FormatKey(_st.KUndo)+")");
-        if (_helpBtn != null)  _tt.SetToolTip(_helpBtn,  "Hilfe ("+DrawState.FormatKey(_st.KHelp)+")");
+        if (_undoBtn != null)  _tt.SetToolTip(_undoBtn,  "Undo (Ctrl+"+DrawState.FormatKey(_st.KUndo)+")");
+        if (_helpBtn != null)  _tt.SetToolTip(_helpBtn,  "Help ("+DrawState.FormatKey(_st.KHelp)+")");
         if (_trayBtn != null)  _tt.SetToolTip(_trayBtn,  "In Tray ("+DrawState.FormatKey(_st.KTray)+")");
-        if (_clearBtn != null) _tt.SetToolTip(_clearBtn, "Alles löschen ("+DrawState.FormatKey(_st.KClear)+")");
-        if (_quitBtn != null)  _tt.SetToolTip(_quitBtn,  "Beenden ("+DrawState.FormatKey(_st.KQuit)+")");
+        if (_clearBtn != null) _tt.SetToolTip(_clearBtn, "Clear all ("+DrawState.FormatKey(_st.KClear)+")");
+        if (_quitBtn != null)  _tt.SetToolTip(_quitBtn,  "Quit ("+DrawState.FormatKey(_st.KQuit)+")");
     }
 
     // MUP-234826: ALL tools now have right-click options
@@ -2385,18 +2385,18 @@ class FloatingBar : Form {
 
         if (tool == DrawTool.Pen) {
             // Dash style options
-            cm.Items.Add(new ToolStripLabel("Linienstil"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
+            cm.Items.Add(new ToolStripLabel("Line style"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
             AddRadio(cm, "Durchgezogen", _st.PenDash==DashStyle.Solid,   ()=>{_st.PenDash=DashStyle.Solid;});
             AddRadio(cm, "Gestrichelt",  _st.PenDash==DashStyle.Dash,    ()=>{_st.PenDash=DashStyle.Dash;});
             AddRadio(cm, "Gepunktet",    _st.PenDash==DashStyle.Dot,     ()=>{_st.PenDash=DashStyle.Dot;});
             cm.Items.Add(new ToolStripSeparator());
-            cm.Items.Add(new ToolStripLabel("Linienenden"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
+            cm.Items.Add(new ToolStripLabel("Line caps"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
             AddRadio(cm, "Rund",   _st.PenCap==LineCap.Round,  ()=>{_st.PenCap=LineCap.Round;});
             AddRadio(cm, "Eckig",  _st.PenCap==LineCap.Square, ()=>{_st.PenCap=LineCap.Square;});
         }
         else if (tool == DrawTool.Arrow) {
-            cm.Items.Add(new ToolStripLabel("Pfeilkopf"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
-            AddRadio(cm, "\u25B6 Gefüllt",  _st.ArrowHeadStyle==ArrowHead.Filled, ()=>{_st.ArrowHeadStyle=ArrowHead.Filled;});
+            cm.Items.Add(new ToolStripLabel("Arrowhead"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
+            AddRadio(cm, "\u25B6 Filled",  _st.ArrowHeadStyle==ArrowHead.Filled, ()=>{_st.ArrowHeadStyle=ArrowHead.Filled;});
             AddRadio(cm, "\u25B7 Offen",      _st.ArrowHeadStyle==ArrowHead.Open,   ()=>{_st.ArrowHeadStyle=ArrowHead.Open;});
             AddRadio(cm, "\u25C6 Raute",      _st.ArrowHeadStyle==ArrowHead.Diamond,()=>{_st.ArrowHeadStyle=ArrowHead.Diamond;});
             AddRadio(cm, "\u25CF Punkt",      _st.ArrowHeadStyle==ArrowHead.Dot,    ()=>{_st.ArrowHeadStyle=ArrowHead.Dot;});
@@ -2411,19 +2411,19 @@ class FloatingBar : Form {
             AddRadio(cm, "Abgerundet (12)",    _st.RectRadius==12, ()=>{_st.RectRadius=12;});
             AddRadio(cm, "Stark gerundet (24)",_st.RectRadius==24, ()=>{_st.RectRadius=24;});
             cm.Items.Add(new ToolStripSeparator());
-            cm.Items.Add(new ToolStripLabel("Füllung"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
+            cm.Items.Add(new ToolStripLabel("Fill"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
             AddRadio(cm, "Nur Rahmen",    !_st.RectFill, ()=>{_st.RectFill=false;});
             AddRadio(cm, "Halbtransparent", _st.RectFill, ()=>{_st.RectFill=true;});
         }
         else if (tool == DrawTool.Ellipse) {
             // MUP-234826: Ellipse fill option
-            cm.Items.Add(new ToolStripLabel("Füllung"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
+            cm.Items.Add(new ToolStripLabel("Fill"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
             AddRadio(cm, "Nur Rahmen",      !_st.EllipseFill, ()=>{_st.EllipseFill=false;});
             AddRadio(cm, "Halbtransparent",  _st.EllipseFill,  ()=>{_st.EllipseFill=true;});
         }
         else if (tool == DrawTool.Text) {
             // MUP-234826: Text size option
-            cm.Items.Add(new ToolStripLabel("Schriftgröße"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
+            cm.Items.Add(new ToolStripLabel("Font size"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
             AddRadio(cm, "Klein (14pt)",  _st.TextSize==14f, ()=>{_st.TextSize=14f;});
             AddRadio(cm, "Normal (20pt)", _st.TextSize==20f, ()=>{_st.TextSize=20f;});
             AddRadio(cm, "Gross (32pt)",  _st.TextSize==32f, ()=>{_st.TextSize=32f;});
@@ -2448,14 +2448,14 @@ class FloatingBar : Form {
             AddRadio(cm, "Kreuz-Schraffur (rot)", _st.CensorMode==CensorMethod.CrossHatch, ()=>{_st.CensorMode=CensorMethod.CrossHatch;});
             AddRadio(cm, "Weichzeichner", _st.CensorMode==CensorMethod.Blur, ()=>{_st.CensorMode=CensorMethod.Blur;});
             cm.Items.Add(new ToolStripSeparator());
-            cm.Items.Add(new ToolStripLabel("Intensität"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
+            cm.Items.Add(new ToolStripLabel("Intensity"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
             AddRadio(cm, "Leicht", _st.CensorLevel==CensorIntensity.Light, ()=>{_st.CensorLevel=CensorIntensity.Light;});
             AddRadio(cm, "Normal", _st.CensorLevel==CensorIntensity.Medium, ()=>{_st.CensorLevel=CensorIntensity.Medium;});
             AddRadio(cm, "Stark", _st.CensorLevel==CensorIntensity.Heavy, ()=>{_st.CensorLevel=CensorIntensity.Heavy;});
         }
         else if (tool == DrawTool.Stamp) {
             // ── Image stamps section ──
-            cm.Items.Add(new ToolStripLabel("Bild-Stempel"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
+            cm.Items.Add(new ToolStripLabel("Image stamps"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
             StampManager.Init();
             for (int i=0;i<StampManager.ImageStampKeys.Length;i++) {
                 string key=StampManager.ImageStampKeys[i]; string nm=StampManager.ImageStampNames[i];
@@ -2468,10 +2468,10 @@ class FloatingBar : Form {
             }
             cm.Items.Add(new ToolStripSeparator());
             // ── Emoji stamps section ──
-            cm.Items.Add(new ToolStripLabel("Emoji-Stempel"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
+            cm.Items.Add(new ToolStripLabel("Emoji stamps"){ ForeColor=Color.FromArgb(255,160,0), Font=new Font("Segoe UI",9f,FontStyle.Bold) });
             // MUP-234951: Expanded emoji set (20 emojis)
             string[] stamps = { "\u2714","\u274C","\u2757","\u2753","\u2B50","\uD83D\uDD25","\uD83D\uDC4D","\uD83D\uDC4E","\uD83D\uDCA1","\u26A0","\uD83D\uDD12","\u2764","\uD83D\uDE80","\uD83C\uDFAF","\uD83D\uDCDD","\uD83C\uDF89","\uD83D\uDED1","\uD83D\uDD04","\uD83D\uDCCC","\uD83E\uDD84","\uD83D\uDCA9","\uD83E\uDECF","\uD83D\uDD95" };
-            string[] names  = { "Häkchen","Kreuz","Ausrufezeichen","Fragezeichen","Stern","Feuer","Daumen hoch","Daumen runter","Glühbirne","Warnung","Schloss","Herz","Rakete","Zielscheibe","Notiz","Party","Stop","Refresh","Pin","Einhorn","Kacke","Esel","Mittelfinger" };
+            string[] names  = { "Check mark","Kreuz","Ausrufezeichen","Fragezeichen","Stern","Feuer","Daumen hoch","Daumen runter","Light bulb","Warning","Schloss","Herz","Rakete","Zielscheibe","Notiz","Party","Stop","Refresh","Pin","Einhorn","Kacke","Esel","Mittelfinger" };
             for (int i=0;i<stamps.Length;i++) {
                 string em=stamps[i]; string nm2=names[i]; bool sel2 = !_st.IsImageStamp && _st.StampEmoji==em;
                 ToolStripMenuItem mi = new ToolStripMenuItem(em+"  "+nm2);
