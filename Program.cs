@@ -9,25 +9,25 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Windows.Forms;
 
-// MUP-20260912-102451348-e535: Die Version wird GELESEN, nicht getippt.
+// MUP-20260912-102451348-e535: the version is READ, not typed.
 //
-// 🔴 Vorher stand "v1.0" als Zeichenkette im Startbild. Steigt die
-// csproj auf 1.1.0, zeigte die Oberflaeche weiter "v1.0" -- und
-// niemandem faellt es auf, weil beide Zahlen plausibel aussehen. Es gibt
-// keinen Zustand, in dem etwas offensichtlich kaputt wirkt.
-// Derselbe Fehler wie MFY-20260902-085158364-20d3 bei Massfyle.
+// 🔴 There used to be a literal "v1.0" on the splash screen. Bump the
+// csproj to 1.1.0 and the UI would still say "v1.0" -- and nobody would
+// notice, because both numbers look plausible. There is no state in which
+// anything looks obviously broken.
+// The same mistake as MFY-20260902-085158364-20d3 in Massfyle.
 static class AppInfo {
     public const string Herausgeber = "Eselchen Labs";
-    // 🔴 Pflicht aus CC BY 4.0, keine Hoeflichkeit. THIRD-PARTY-NOTICES.md
-    // behauptet, der Hinweis sei "in der Oberflaeche erreichbar" --
-    // bis heute stimmte das nicht.
+    // 🔴 Required by CC BY 4.0, not a courtesy. THIRD-PARTY-NOTICES.md
+    // claimed the notice was "reachable from the user interface" --
+    // which was untrue until today.
     public const string EmojiHinweis = "Emoji: Twemoji (CC BY 4.0)";
 
     public static string VersionText() {
         var v = System.Reflection.Assembly
             .GetExecutingAssembly().GetName().Version;
-        // Lieber gar nichts als eine erfundene Zahl -- dieselbe Haltung
-        // wie utils/lizenz.py in Massfyle.
+        // Better nothing at all than an invented number -- the same stance
+        // as utils/lizenz.py in Massfyle.
         if (v == null) return "";
         return "v" + v.Major + "." + v.Minor
              + (v.Build > 0 ? "." + v.Build : "");
@@ -46,7 +46,7 @@ class Program {
             Application.SetHighDpiMode(HighDpiMode.SystemAware); // MUP-b45e: SystemAware fixes multi-monitor coordinate mismatch
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            // Eine Toolbar, ein Overlay pro Monitor
+            // One toolbar, one overlay per monitor
             MarkUpApp app = new MarkUpApp();
             app.Run();
         } catch (Exception ex) {
@@ -491,16 +491,16 @@ static class StampManager {
     static Dictionary<string,Bitmap> _cache = new Dictionary<string,Bitmap>();
     static bool _initialized = false;
 
-    // MUP-20260912-101909129-ca2d: Hier standen zwei fremde Firmenlogos
-    // als Base64 (~39 KB). Sie nannten den Arbeitgeber, und `#if` nimmt
-    // sie nur aus dem BUILD, nicht aus der DATEI.
-    // Logos kommen jetzt aus stamps/ -- siehe LadeLogosAusOrdner.
-    // Hinweis aus MUP-234715: ein Logo kann als .png benannt und in
-    // Wahrheit WebP sein; .NET kann es dann nicht laden. LoadLogo
-    // faengt das ab und setzt einen Textstempel an seine Stelle.
+    // MUP-20260912-101909129-ca2d: two third-party company logos used to
+    // sit here as base64 (~39 KB). They named the employer, and `#if` only
+    // removes them from the BUILD, not from the FILE.
+    // Logos now come from stamps/ -- see LadeLogosAusOrdner.
+    // Note from MUP-234715: a logo may be named .png and actually be WebP;
+    // .NET then cannot load it. LoadLogo catches that and puts a text stamp
+    // in its place.
 
-    // 🔴 Nicht mehr `readonly`: LadeLogosAusOrdner haengt an, was
-    // in stamps/ liegt. Die vier Textstempel stehen immer da.
+    // 🔴 No longer `readonly`: LadeLogosAusOrdner appends whatever is
+    // in stamps/. The four text stamps are always present.
     public static string[] ImageStampKeys = { "approved","rejected","draft","confidential" };
     public static string[] ImageStampNames = { "Approved","Rejected","Draft","Confidential" };
 
@@ -514,19 +514,18 @@ static class StampManager {
         _cache["confidential"] = MakeTextStamp("CONFIDENTIAL", Color.FromArgb(140,40,160), Color.White);
         // Load logo PNGs from stamps/ directory next to the executable
         string stampDir = GetStampDir();
-        // MUP-20260912-101909129-ca2d: Keine fest verdrahteten
-        // Firmennamen mehr. Was in stamps/ als *_logo.png liegt,
-        // wird angeboten -- der Name kommt aus dem Dateinamen.
-        // Damit ist der Quelltext frei von fremden Marken UND die
-        // private Fassung behaelt ihre Logos.
+        // MUP-20260912-101909129-ca2d: no more hard-wired company names.
+        // Whatever sits in stamps/ as *_logo.png is offered -- the label
+        // comes from the file name. That keeps the source free of
+        // third-party marks AND lets the private edition keep its logos.
         LadeLogosAusOrdner(stampDir);
     }
 
-    // MUP-20260912-101909129-ca2d: Logos aus dem Ordner statt aus dem
-    // Quelltext. Vorher standen zwei fremde Firmenlogos als Base64 in
-    // Program.cs (~28 KB) und ihre Namen in zwei Arrays -- `#if` nimmt
-    // sie aus dem BUILD, nicht aus der DATEI. Ein Leser des Repos haette
-    // sie trotzdem gesehen.
+    // MUP-20260912-101909129-ca2d: logos from the folder instead of from
+    // the source. Two third-party company logos used to sit in Program.cs as
+    // base64 (~28 KB) with their names in two arrays -- `#if` removes them
+    // from the BUILD, not from the FILE. Anyone reading the repository would
+    // still have seen them.
     static void LadeLogosAusOrdner(string stampDir) {
         try {
             if (!Directory.Exists(stampDir)) return;
@@ -546,8 +545,8 @@ static class StampManager {
             ImageStampKeys = keys.ToArray();
             ImageStampNames = namen.ToArray();
         } catch {
-            // Ein fehlender oder unlesbarer Ordner darf den Start nicht
-            // verhindern -- die vier Textstempel gibt es weiterhin.
+            // A missing or unreadable folder must not prevent startup --
+            // the four text stamps are still there.
         }
     }
 
@@ -734,18 +733,17 @@ enum ArrowHead { Filled, Open, Diamond, Dot }
 enum CensorMethod { BlackBar, Pixelate, DiagonalHatch, CrossHatch, Blur }
 enum CensorIntensity { Light, Medium, Heavy }
 
-// ── Shared drawing state (alle Overlays teilen sich Tool/Farbe/Stärke) ────────
+// ── Shared drawing state (all overlays share tool/colour/width) ───────────
 class DrawState {
     public DrawTool Tool      = DrawTool.Pen;
     public Color    Color     = Color.FromArgb(255, 60, 60);
     public float    Width     = 4f;
     public bool     PassThru  = true;  // MUP-234541: Markup mode OFF at startup
     public bool     ShowHelp  = false;
-    // MUP-20260912-102455567-e140: Lage des Hilfe-Kastens.
-    // null = mittig wie bisher -- wer nie zieht, merkt keinen
-    // Unterschied. 🔴 Gehoert in den GETEILTEN Zustand: sonst
-    // wandert die Hilfe auf einem Bildschirm und bleibt auf dem
-    // anderen stehen.
+    // MUP-20260912-102455567-e140: position of the help box.
+    // null = centred as before -- anyone who never drags it notices no
+    // difference. 🔴 Belongs in the SHARED state: otherwise the help
+    // box moves on one monitor and stays put on the other.
     public Point?   HelpPos   = null;
 
     // Stamp tool
@@ -1720,12 +1718,12 @@ class ScreenOverlay : Form {
     // MKP-133745: Public methods called from MarkUpApp via global mouse hook.
     // These receive overlay-local coordinates (already translated from screen coords).
     public void OnHookDown(Point loc) {
-        // MUP-20260912-102455567-e140: Vorher schloss JEDER Klick die
-        // Hilfe -- man konnte sie nicht anfassen, ohne sie zu schliessen.
+        // MUP-20260912-102455567-e140: EVERY click used to close the help
+        // box -- you could not touch it without dismissing it.
         //
-        // 🔴 Der Zweig endet in JEDEM Fall mit `return`: unter der offenen
-        // Hilfe wird nie gezeichnet. Ohne das malte ein Klick in den
-        // Kasten eine Linie.
+        // 🔴 This branch ends in `return` in EVERY case: nothing is ever
+        // drawn underneath the open help box. Without that, a click inside
+        // the box painted a line.
         if (_st.ShowHelp) {
             Rectangle hr = HelpRect();
             if (HelpCloseRect(hr).Contains(loc)) {
@@ -1734,7 +1732,7 @@ class ScreenOverlay : Form {
                 _helpDrag=true;
                 _helpGrab=new Size(loc.X-hr.X, loc.Y-hr.Y);
             } else if (!hr.Contains(loc)) {
-                // Klick daneben schliesst weiter -- die gewohnte Geste.
+                // A click beside it still closes -- the familiar gesture.
                 _st.ShowHelp=false; MarkFullDirty(); _st.Fire();
             }
             return;
@@ -1787,14 +1785,14 @@ class ScreenOverlay : Form {
             }
         }
     }
-    // MUP-20260912-102455567-e140: Zustand des Ziehens.
+    // MUP-20260912-102455567-e140: drag state.
     bool _helpDrag = false;
     Size _helpGrab = Size.Empty;
 
     public void OnHookMove(Point loc) {
         if (_helpDrag) {
-            // 🔴 MarkFullDirty, nicht MarkDirty: `MarkDirty` arbeitet mit
-            // Bereichen, ein bewegter Kasten hinterliesse Schlieren.
+            // 🔴 MarkFullDirty, not MarkDirty: `MarkDirty` works with
+            // regions, and a moving box would leave smears behind.
             _st.HelpPos = HelpClamp(new Point(loc.X-_helpGrab.Width,
                                               loc.Y-_helpGrab.Height));
             MarkFullDirty(); Render(); return;
@@ -1829,7 +1827,7 @@ class ScreenOverlay : Form {
     public void OnHookUp(Point loc) {
         if (_helpDrag) {
             _helpDrag=false;
-            // Fire(), damit die anderen Overlays die neue Lage uebernehmen.
+            // Fire() so the other overlays pick up the new position.
             _st.Fire();
             return;
         }
@@ -1869,13 +1867,12 @@ class ScreenOverlay : Form {
     }
 
     // ── Help ──────────────────────────────────────────────────────────────────
-    // MUP-20260912-102455567-e140: EINE Stelle rechnet die Lage.
-    // Zeichnen und Trefferpruefung muessen dieselbe benutzen, sonst
-    // laufen sie auseinander und das Kreuz sitzt woanders, als es
-    // aussieht.
+    // MUP-20260912-102455567-e140: ONE place computes the position.
+    // Drawing and hit-testing must use the same one, otherwise they drift
+    // apart and the close cross sits somewhere other than where it looks.
     //
-    // MUP-20260912-102451348-e535: HilfeH 420 -> 448. Der Schliess-Hinweis
-    // sitzt bei ph-46, die Fusszeile bei ph-24; daneben war kein Platz.
+    // MUP-20260912-102451348-e535: HilfeH 420 -> 448. The close hint sits at
+    // ph-46 and the footer at ph-24; there was no room next to it.
     const int HilfeB = 500, HilfeH = 448, GriffH = 44, KreuzG = 28;
 
     Rectangle HelpRect() {
@@ -1884,9 +1881,9 @@ class ScreenOverlay : Form {
         if (!_st.HelpPos.HasValue)
             return new Rectangle((bw-HilfeB)/2, (bh-HilfeH)/2, HilfeB, HilfeH);
         Point p = _st.HelpPos.Value;
-        // 🔴 Aufloesung geaendert? Ein gespeicherter Punkt kann danach
-        // ausserhalb liegen. Dann in die Mitte zurueck, statt unsichtbar
-        // zu bleiben.
+        // 🔴 Resolution changed? A stored point may then lie outside
+        // the screen. In that case fall back to the centre instead of
+        // staying invisible.
         if (p.X > bw-60 || p.Y > bh-60 || p.X < -(HilfeB-60) || p.Y < 0) {
             _st.HelpPos = null;
             return new Rectangle((bw-HilfeB)/2, (bh-HilfeH)/2, HilfeB, HilfeH);
@@ -1894,7 +1891,7 @@ class ScreenOverlay : Form {
         return new Rectangle(p.X, p.Y, HilfeB, HilfeH);
     }
 
-    // Das Kreuz oben rechts, und die Titelzeile daneben als Griff.
+    // The close cross at the top right, with the title bar beside it as the drag handle.
     Rectangle HelpCloseRect(Rectangle r) {
         return new Rectangle(r.Right-38, r.Y+10, KreuzG, KreuzG);
     }
@@ -1902,9 +1899,9 @@ class ScreenOverlay : Form {
         return new Rectangle(r.X, r.Y, r.Width-48, GriffH);
     }
 
-    // 🔴 Mindestens 60 px waagerecht sichtbar, und senkrecht nie ueber den
-    // oberen Rand hinaus: sonst zieht man den Kasten hinaus und kommt an
-    // die Titelzeile nicht mehr heran.
+    // 🔴 At least 60 px must stay visible horizontally, and never
+    // above the top edge: otherwise you drag the box off-screen and can no
+    // longer reach its title bar.
     Point HelpClamp(Point p) {
         int bw=_physWidth>0?_physWidth:Width, bh=_physHeight>0?_physHeight:Height;
         int x = Math.Max(-(HilfeB-60), Math.Min(bw-60, p.X));
@@ -1923,10 +1920,9 @@ class ScreenOverlay : Form {
         int x=px+30,y=py+24;
         using(Font ft=new Font("Segoe UI",15f,FontStyle.Bold))
         using(SolidBrush w=new SolidBrush(Color.White)) g.DrawString("MarkUp  -  Hilfe",ft,w,x,y);
-        // MUP-20260912-102455567-e140: Der eigene Weg zum
-        // Schliessen. Ohne ihn waere die Hilfe nach dem Wegfall
-        // des pauschalen Klicks nur noch ueber die Taste zu
-        // schliessen.
+        // MUP-20260912-102455567-e140: a dedicated way to close. Without
+        // it, once the catch-all click was removed, the help box could only
+        // be closed with the keyboard.
         Rectangle kr = HelpCloseRect(hr);
         using(SolidBrush kb=new SolidBrush(Color.FromArgb(40,255,255,255)))
         using(GraphicsPath kp=RR(kr.X,kr.Y,kr.Width,kr.Height,6))
@@ -1945,9 +1941,9 @@ class ScreenOverlay : Form {
         using(Font sm=new Font("Segoe UI",9f))
         using(SolidBrush dim=new SolidBrush(Color.FromArgb(80,255,255,255)))
             g.DrawString(DrawState.FormatKey(_st.KHelp)+" oder Klick zum Schließen",sm,dim,px+pw-200,py+ph-46);
-        // MUP-20260912-102451348-e535: Version, Herausgeber und
-        // die Twemoji-Nennung -- dauerhaft erreichbar ueber die
-        // Hilfetaste, anders als der Startbildschirm.
+        // MUP-20260912-102451348-e535: version, publisher and the Twemoji
+        // attribution -- permanently reachable via the help key, unlike the
+        // splash screen.
         using(Pen trenn=new Pen(Color.FromArgb(40,255,255,255),1f))
             g.DrawLine(trenn,px+30,py+ph-32,px+pw-30,py+ph-32);
         using(Font sm2=new Font("Segoe UI",8.5f))
